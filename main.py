@@ -1,7 +1,9 @@
-from OBSController import OBSController
-from Recorder import Recorder
-from WoWController import WoWController
+from obs.obs_control import OBSController
+from wow_recorder import Recorder
+from wow.wow_control import WoWController
 
+#configureation
+#TODO: move this to file
 host = 'localhost'
 port = 4455
 password = 'zbnfiosglNUQTbjJ'

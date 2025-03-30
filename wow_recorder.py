@@ -1,12 +1,12 @@
 import datetime
 import os.path
 import shutil
+from enum import Enum
 from time import sleep
 
-from Activity import Activity, ActivityType
-from OBSController import OBSController
-from WoWController import WoWController
-from wow_log_parser import parse_wow_log_line
+from obs.obs_control import OBSController
+from wow.wow_control import WoWController
+from wow.wow_log_parser import parse_wow_log_line
 
 # ENCOUNTER_START,2847,"Captain Dailcry",8,5,2649    encID, encName, DiffID, players
 # ENCOUNTER_END,2847,"Captain Dailcry",8,5,1,131971  encID, cndName, diffID, players, success?
@@ -20,6 +20,31 @@ from wow_log_parser import parse_wow_log_line
 # 3/27/2025 23:12:56.2881  CHALLENGE_MODE_END,2649,0,0,0,0.000000,0.000000
 # 3/27/2025 23:12:56.4561  CHALLENGE_MODE_START,"Priory of the Sacred Flame",2649,499,10,[160,10,9]
 # 3/27/2025 23:39:27.4231  CHALLENGE_MODE_END,2649,1,10,1602330,326.685974,2683.563965
+
+class ActivityType(Enum):
+    M_PLUS = 1
+    RAID = 2
+
+
+class Activity:
+    def __init__(self, activity_type: ActivityType, name, player_count, key_level=0):
+        self.key_level = key_level
+        self.player_count = player_count
+        self.name = name
+        self.activity_type = activity_type
+        self.start_time = datetime.datetime.now()
+        self.events = []
+        self.success = False
+
+    def __str__(self):
+        return str({"activity_type": self.activity_type, "player_count": self.player_count, "name": self.name, "start_time": str(self.start_time), "success": self.success, "events": len(self.events)})
+
+    def add_event(self, timestamp: datetime.datetime, event: str):
+        delta = self.start_time - timestamp
+        relative_time = delta.total_seconds()
+        event = {"time": relative_time, "event": event}
+        self.events.append(event)
+        print("Added event: {0}".format(event))
 
 
 def make_file_name(activity):
