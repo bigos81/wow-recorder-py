@@ -3,7 +3,6 @@ from wow_recorder import Recorder
 from wow.wow_control import WoWController
 
 #configureation
-#TODO: move this to file
 host = 'localhost'
 port = 4455
 password = 'zbnfiosglNUQTbjJ'

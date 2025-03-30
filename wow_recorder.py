@@ -4,9 +4,10 @@ import shutil
 from enum import Enum
 from time import sleep
 
-from obs.obs_control import OBSController
+import obs.obs_control
 from wow.wow_control import WoWController
 from wow.wow_log_parser import parse_wow_log_line
+
 
 # ENCOUNTER_START,2847,"Captain Dailcry",8,5,2649    encID, encName, DiffID, players
 # ENCOUNTER_END,2847,"Captain Dailcry",8,5,1,131971  encID, cndName, diffID, players, success?
@@ -69,7 +70,7 @@ def make_file_name(activity):
 
 
 class Recorder:
-    def __init__(self, obs_controller: OBSController, wow_controller: WoWController, recording_target_folder: str, death_delay_seconds = 3):
+    def __init__(self, obs_controller: obs.obs_control.OBSController, wow_controller: WoWController, recording_target_folder: str, death_delay_seconds = 3):
         
         self.death_delay_seconds = death_delay_seconds
         self.recording_target_folder = recording_target_folder
