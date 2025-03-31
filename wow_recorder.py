@@ -43,7 +43,9 @@ class Activity:
 
     def add_event(self, timestamp: datetime.datetime, event: str):
         delta = timestamp - self.start_time
-        relative_time = delta.total_seconds()
+        total_minute, second = divmod(delta.seconds, 60)
+        hour, minute = divmod(total_minute, 60)
+        relative_time = f"{hour:02}:{minute:02}:{second:02}"
         event = {"time": relative_time, "event": event}
         self.events.append(event)
         print("Added event: {0}".format(event))
