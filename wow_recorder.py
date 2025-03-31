@@ -88,7 +88,8 @@ class Recorder:
             log_line = self.wow_controller.get_log_line()
             if len(log_line) > 0:
                 result = parse_wow_log_line(log_line)
-                self.handle_wow_line(result)
+                if result is not None:
+                    self.handle_wow_line(result)
             else:
                 if self.activity is None:
                     # idle 1 second and try to get log event again

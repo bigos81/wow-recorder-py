@@ -59,8 +59,6 @@ class WoWController:
                 self.log_file_handle = None
             else:
                 self.last_log_time = datetime.datetime.now()
-                print("Current log file still up to date after {0} seconds of inactivity".format(self.new_log_file_timeout_seconds))
-
         return line
 
 
