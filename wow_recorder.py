@@ -1,6 +1,7 @@
 import datetime
 import os.path
 import shutil
+import time
 from enum import Enum
 from time import sleep
 
@@ -70,8 +71,9 @@ def make_file_name(activity):
 
 
 class Recorder:
-    def __init__(self, obs_controller: obs.obs_control.OBSController, wow_controller: WoWController, recording_target_folder: str, death_delay_seconds = 3):
+    def __init__(self, obs_controller: obs.obs_control.OBSController, wow_controller: WoWController, recording_target_folder: str, death_delay_seconds = 3, linger_time_seconds = 5):
         
+        self.linger_time_seconds = linger_time_seconds
         self.death_delay_seconds = death_delay_seconds
         self.recording_target_folder = recording_target_folder
         self.wow_controller = wow_controller
@@ -105,8 +107,12 @@ class Recorder:
         if not self.is_recording():
             print("Cannot end non-active Activity")
             return
-
         self.activity.success = success
+
+        if self.linger_time_seconds > 0:
+            print(f"Lingering recording time by {self.linger_time_seconds} seconds...")
+            time.sleep(self.linger_time_seconds)
+
         recording_path = self.obs_controller.end_recording()
         print("Recording finished {0}, OBS result {1}".format(self.activity, recording_path))
         self.handle_recording(recording_path)
