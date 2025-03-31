@@ -42,7 +42,7 @@ class Activity:
         return str({"activity_type": self.activity_type, "player_count": self.player_count, "name": self.name, "start_time": str(self.start_time), "success": self.success, "events": len(self.events)})
 
     def add_event(self, timestamp: datetime.datetime, event: str):
-        delta = self.start_time - timestamp
+        delta = timestamp - self.start_time
         relative_time = delta.total_seconds()
         event = {"time": relative_time, "event": event}
         self.events.append(event)
@@ -130,7 +130,7 @@ class Recorder:
         dest_event_file_path = dest_file_path.replace('.mkv', '.evt')
         f = open(dest_event_file_path, "w+")
         for e in self.activity.events:
-            f.write(f"{e['time']}\t{e['event']}")
+            f.write(f"{e['time']}\t{e['event']}\n")
         f.close()
 
 
