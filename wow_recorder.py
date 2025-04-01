@@ -69,7 +69,7 @@ def make_file_name(activity):
             result = 'wipe'
 
 
-    return f"{activity.start_time.strftime(f'%Y-%m-%d__%H-%M-%S')}__{activity_type}__{activity.name}__{activity.name}__{result}.mkv"
+    return f"{activity.start_time.strftime(f'%Y-%m-%d__%H-%M-%S')}__{activity_type}__{activity.name}__{result}.mkv"
 
 
 class Recorder:
