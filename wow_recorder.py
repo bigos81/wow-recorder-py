@@ -184,7 +184,7 @@ class Recorder:
             case 'UNIT_DIED':
                 if self.is_recording():
                     if str(result["rest"][5]).startswith("Player-"):
-                        dead_player = result["rest"][6]
+                        dead_player = result["rest"][6].replace('"','')
                         self.activity.add_event(timestamp - datetime.timedelta(seconds=self.death_delay_seconds), "Death: {0}".format(dead_player))
 
 
