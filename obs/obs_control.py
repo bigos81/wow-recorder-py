@@ -1,13 +1,22 @@
 import obsws_python as obs
+import psutil
+
 
 class OBSController:
 
     def __init__(self, host, port, password):
+        self.OBS_PROCESS_NAME = 'obs'
         self.connected = False
         self.obs_client = None
         self.host = host
         self.port = port
         self.password = password
+
+    def is_running(self):
+        for process in psutil.process_iter():
+            if self.OBS_PROCESS_NAME == process.name():
+                return True
+        return False
 
     def connect(self):
         self.obs_client = obs.ReqClient(host=self.host, port=self.port, password=self.password)

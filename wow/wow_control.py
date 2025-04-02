@@ -2,6 +2,7 @@ import datetime
 import io
 import os
 import subprocess
+import psutil
 from os.path import isfile
 
 
@@ -17,7 +18,11 @@ class WoWController:
         self.new_log_file_timeout_seconds = 5
 
     def is_running(self):
-        return self.WOW_PROCESS_NAME in subprocess.check_output(["ps", "-aux"]).decode()
+        for process in psutil.process_iter():
+            if self.WOW_PROCESS_NAME == process.name():
+                return True
+        return False
+
 
     def get_current_log_path(self):
         last_date = 0
