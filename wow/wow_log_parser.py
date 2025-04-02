@@ -1,8 +1,13 @@
+import re
 from dateutil import parser
 from dateutil.parser import ParserError
 
 
 def parse_wow_log_line(line):
+    # remove comas from quoted strings
+    for quoted in re.findall('"([^"]*)"', line):
+        line = line.replace(quoted, quoted.replace(',',''))
+
     chunks = line.split('  ')
     if len(chunks) != 2:
         return None
