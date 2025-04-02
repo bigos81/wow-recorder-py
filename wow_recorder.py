@@ -72,6 +72,12 @@ def make_file_name(activity):
     return f"{activity.start_time.strftime(f'%Y-%m-%d__%H-%M-%S')}__{activity_type}__{activity.name}__{result}.mkv"
 
 
+def get_file_extension(dest_file_name):
+    chunks = dest_file_name.split('.')
+    if chunks > 1:
+        return chunks[-1]
+    return ''
+
 class Recorder:
     def __init__(self, obs_controller: obs.obs_control.OBSController, wow_controller: WoWController, recording_target_folder: str, death_delay_seconds = 3, linger_time_seconds = 5):
         
@@ -129,8 +135,8 @@ class Recorder:
         dest_file_path = os.path.join(self.recording_target_folder, dest_file_name)
         shutil.move(recording_path, dest_file_path)
 
-
-        dest_event_file_path = dest_file_path.replace('.mkv', '.evt')
+        file_extension = get_file_extension(dest_file_name);
+        dest_event_file_path = dest_file_path.replace(file_extension, '.evt')
         f = open(dest_event_file_path, "w+")
         for e in self.activity.events:
             f.write(f"{e['time']}\t{e['event']}\n")
