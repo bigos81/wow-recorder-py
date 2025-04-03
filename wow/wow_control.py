@@ -5,6 +5,8 @@ import subprocess
 import psutil
 from os.path import isfile
 
+from distlib.database import new_dist_class
+
 
 class WoWController:
 
@@ -16,13 +18,13 @@ class WoWController:
         self.log_file_path = None
         self.last_log_time = datetime.datetime.now()
         self.new_log_file_timeout_seconds = 5
+        self.log_file_name = None
 
     def is_running(self):
         for process in psutil.process_iter():
             if self.WOW_PROCESS_NAME == process.name():
                 return True
         return False
-
 
     def get_current_log_path(self):
         last_date = 0
@@ -34,20 +36,22 @@ class WoWController:
                 if file_date > last_date:
                     last_date = file_date
                     current_log = file_path
+                    self.log_file_name = os.path.basename(current_log)
 
         return current_log
 
     def get_log_line(self):
+        new_file = False
         if self.log_file_handle is None:
             # need new file to tail
             log_path = self.get_current_log_path()
             if log_path is not None:
                 # open file and rewind to end
+                new_file = True
                 self.last_log_time = datetime.datetime.now()
                 self.log_file_handle = open(log_path, "r")
                 self.log_file_handle.seek(0, io.SEEK_END)
                 self.log_file_path = log_path
-                print("Reading log file from: {0}".format(self.log_file_path))
             else:
                 # not logging
                 return ''
@@ -60,10 +64,9 @@ class WoWController:
         if datedelta.seconds > self.new_log_file_timeout_seconds:
             new_log_file = self.get_current_log_path()
             if self.log_file_path != new_log_file:
-                print("New log file found! Resetting log handle")
                 self.log_file_handle = None
             else:
                 self.last_log_time = datetime.datetime.now()
-        return line
+        return line, new_file
 
 

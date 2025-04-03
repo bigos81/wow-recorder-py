@@ -48,7 +48,7 @@ class Activity:
         relative_time = f"{hour:02}:{minute:02}:{second:02}"
         event = {"time": relative_time, "event": event}
         self.events.append(event)
-        print("Added event: {0}".format(event))
+        self.last_message = "Added event: {0}".format(event)
 
 
 def make_file_name(activity):
@@ -81,6 +81,7 @@ def get_file_extension(dest_file_name):
 class Recorder:
     def __init__(self, obs_controller: obs.obs_control.OBSController, wow_controller: WoWController, recording_target_folder: str, death_delay_seconds = 3, linger_time_seconds = 5):
         
+        self.last_message = None
         self.linger_time_seconds = linger_time_seconds
         self.death_delay_seconds = death_delay_seconds
         self.recording_target_folder = recording_target_folder
@@ -89,41 +90,47 @@ class Recorder:
 
         self.activity = None
 
+    def process(self):
+        log_line, is_new = self.wow_controller.get_log_line()
+        if is_new:
+            self.last_message = f"New log file: {self.wow_controller.log_file_name}"
+        if len(log_line) > 0:
+            result = parse_wow_log_line(log_line)
+            if result is not None:
+                self.handle_wow_line(result)
+        else:
+            if self.activity is None:
+                # idle 1 second and try to get log event again
+                sleep(0)
+
+
     # main loop
     def start(self):
         self.obs_controller.connect()
         while True:
-            log_line = self.wow_controller.get_log_line()
-            if len(log_line) > 0:
-                result = parse_wow_log_line(log_line)
-                if result is not None:
-                    self.handle_wow_line(result)
-            else:
-                if self.activity is None:
-                    # idle 1 second and try to get log event again
-                    sleep(1)
+            self.process()
 
     def start_activity(self, activity: Activity):
         if self.is_recording():
-            print("Activity already in progress, cannot start new one")
+            self.last_message = "Activity already in progress, cannot start new one"
             return
 
         self.activity = activity
         self.obs_controller.start_recording()
-        print("Recording started {0}".format(self.activity))
+        self.last_message = "Recording started {0}".format(self.activity)
 
     def end_activity(self, success):
         if not self.is_recording():
-            print("Cannot end non-active Activity")
+            self.last_message = "Cannot end non-active Activity"
             return
         self.activity.success = success
 
         if self.linger_time_seconds > 0:
-            print(f"Lingering recording time by {self.linger_time_seconds} seconds...")
+            self.last_message = f"Lingering recording time by {self.linger_time_seconds} seconds..."
             time.sleep(self.linger_time_seconds)
 
         recording_path = self.obs_controller.end_recording()
-        print("Recording finished {0}, OBS result {1}".format(self.activity, recording_path))
+        self.last_message = "Recording finished {0}, OBS result {1}".format(self.activity, recording_path)
         self.handle_recording(recording_path)
         self.activity = None
 
