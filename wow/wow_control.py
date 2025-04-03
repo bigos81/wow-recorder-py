@@ -1,11 +1,8 @@
 import datetime
 import io
 import os
-import subprocess
 import psutil
 from os.path import isfile
-
-from distlib.database import new_dist_class
 
 
 class WoWController:
@@ -41,13 +38,11 @@ class WoWController:
         return current_log
 
     def get_log_line(self):
-        new_file = False
         if self.log_file_handle is None:
             # need new file to tail
             log_path = self.get_current_log_path()
             if log_path is not None:
                 # open file and rewind to end
-                new_file = True
                 self.last_log_time = datetime.datetime.now()
                 self.log_file_handle = open(log_path, "r")
                 self.log_file_handle.seek(0, io.SEEK_END)
@@ -67,6 +62,6 @@ class WoWController:
                 self.log_file_handle = None
             else:
                 self.last_log_time = datetime.datetime.now()
-        return line, new_file
+        return line
 
 

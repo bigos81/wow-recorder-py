@@ -39,7 +39,7 @@ class Activity:
         self.success = False
 
     def __str__(self):
-        return str({"activity_type": self.activity_type, "player_count": self.player_count, "name": self.name, "start_time": str(self.start_time), "success": self.success, "events": len(self.events)})
+        return str({"Type": self.activity_type, "Start": str(self.start_time), "Event count": len(self.events)})
 
     def add_event(self, timestamp: datetime.datetime, event: str):
         delta = timestamp - self.start_time
@@ -48,7 +48,6 @@ class Activity:
         relative_time = f"{hour:02}:{minute:02}:{second:02}"
         event = {"time": relative_time, "event": event}
         self.events.append(event)
-        self.last_message = "Added event: {0}".format(event)
 
 
 def make_file_name(activity):
@@ -74,7 +73,7 @@ def make_file_name(activity):
 
 def get_file_extension(dest_file_name):
     chunks = dest_file_name.split('.')
-    if chunks > 1:
+    if len(chunks) > 1:
         return chunks[-1]
     return ''
 
@@ -91,10 +90,9 @@ class Recorder:
         self.activity = None
 
     def process(self):
-        log_line, is_new = self.wow_controller.get_log_line()
-        if is_new:
-            self.last_message = f"New log file: {self.wow_controller.log_file_name}"
+        log_line = self.wow_controller.get_log_line()
         if len(log_line) > 0:
+            self.last_message = log_line
             result = parse_wow_log_line(log_line)
             if result is not None:
                 self.handle_wow_line(result)
@@ -130,7 +128,7 @@ class Recorder:
             time.sleep(self.linger_time_seconds)
 
         recording_path = self.obs_controller.end_recording()
-        self.last_message = "Recording finished {0}, OBS result {1}".format(self.activity, recording_path)
+        self.last_message = "Recording finished: {0}".format(recording_path)
         self.handle_recording(recording_path)
         self.activity = None
 
@@ -142,7 +140,7 @@ class Recorder:
         dest_file_path = os.path.join(self.recording_target_folder, dest_file_name)
         shutil.move(recording_path, dest_file_path)
 
-        file_extension = get_file_extension(dest_file_name);
+        file_extension = get_file_extension(dest_file_name)
         dest_event_file_path = dest_file_path.replace(file_extension, '.evt')
         f = open(dest_event_file_path, "w+")
         for e in self.activity.events:
