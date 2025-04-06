@@ -90,6 +90,12 @@ class Recorder:
         self.activity = None
 
     def process(self):
+        if not self.obs_controller.connected:
+            if not self.obs_controller.connect():
+                self.last_message = "Cannot connect to OBS"
+            else:
+                self.last_message = "Connection to OBS successful"
+
         log_line = self.wow_controller.get_log_line()
         if len(log_line) > 0:
             self.last_message = log_line

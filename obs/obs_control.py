@@ -1,5 +1,6 @@
 import obsws_python as obs
 import psutil
+from obsws_python.error import OBSSDKError
 
 
 class OBSController:
@@ -19,8 +20,13 @@ class OBSController:
         return False
 
     def connect(self):
-        self.obs_client = obs.ReqClient(host=self.host, port=self.port, password=self.password)
-        self.connected = True
+        try:
+            self.obs_client = obs.ReqClient(host=self.host, port=self.port, password=self.password)
+            self.connected = True
+            return True
+        except ConnectionRefusedError as e:
+            return False
+
 
     def disconnect(self):
         if self.connected:
