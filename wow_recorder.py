@@ -98,7 +98,7 @@ class Recorder:
 
         log_line = self.wow_controller.get_log_line()
         if len(log_line) > 0:
-            self.last_message = log_line
+            # self.last_message = log_line
             result = parse_wow_log_line(log_line)
             if result is not None:
                 self.handle_wow_line(result)

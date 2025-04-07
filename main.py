@@ -60,7 +60,6 @@ def main():
                 print(f"| Last message: {last_msg_formatted} {' '*(112-19-len(str(last_msg_formatted)))}|")
                 print(f"\\-[q to quit]--------------------------------------------------------------------------------[(c) bigos 2025]-/")
                 print('\033[18A\033[2K', end='')
-                sleep(0.25)
         except Exception as e:
             print(e)
         finally:
