@@ -126,6 +126,7 @@ class Recorder:
     def end_activity(self, success):
         if not self.is_recording():
             self.last_message = "Cannot end non-active Activity"
+            self.activity = None
             return
         self.activity.success = success
 
