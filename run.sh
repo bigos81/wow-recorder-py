@@ -1,3 +1,3 @@
 #!/bin/bash
 clear
-python app/main.py
+python wow-recorder/main.py
