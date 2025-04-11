@@ -1,7 +1,7 @@
 attrs==22.2.0
 build==0.10.0
 CacheControl==0.12.11
-certifi==2023.7.22
+certifi>=2024.7.4
 charset-normalizer==3.1.0
 cleo==2.0.1
 crashtest==0.4.1
@@ -10,7 +10,7 @@ distlib==0.3.9
 dulwich==0.21.3
 filelock==3.18.0
 html5lib==1.1
-idna==3.4
+idna>=3.7
 importlib-metadata==6.0.0
 installer==0.6.0
 jaraco.classes==3.2.3
