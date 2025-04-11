@@ -56,10 +56,8 @@ def make_file_name(activity):
 
     if activity.activity_type == ActivityType.M_PLUS:
         activity_type = 'M_PLUS'
-        if activity.success:
-            result = 'timed'
-        else:
-            result = 'burned'
+        duration = (datetime.datetime.now() - activity.start_time).total_seconds() / 60
+        result = f"{int(duration)}_min"
     if activity.activity_type == ActivityType.RAID:
         activity_type = 'RAID'
         if activity.success:
@@ -68,7 +66,7 @@ def make_file_name(activity):
             result = 'wipe'
 
 
-    return f"{activity.start_time.strftime(f'%Y-%m-%d__%H-%M-%S')}__{activity_type}__{activity.name}__{result}.mkv"
+    return f"{activity.start_time.strftime(f'%Y-%m-%d__%H-%M-%S')}__{activity_type}__{activity.name}__{result}.mkv".replace(' ', '_')
 
 
 def get_file_extension(dest_file_name):
@@ -146,8 +144,12 @@ class Recorder:
         if not os.path.exists(self.recording_target_folder):
             os.makedirs(self.recording_target_folder)
 
+        dated_dest_folder = os.path.join(self.recording_target_folder, datetime.datetime.now().strftime('%Y-%m-%d'))
+        if not os.path.exists(dated_dest_folder):
+            os.makedirs(dated_dest_folder)
+
         dest_file_name = make_file_name(self.activity)
-        dest_file_path = os.path.join(self.recording_target_folder, dest_file_name)
+        dest_file_path = os.path.join(dated_dest_folder, dest_file_name)
         shutil.move(recording_path, dest_file_path)
 
         file_extension = get_file_extension(dest_file_name)
