@@ -6,7 +6,7 @@ charset-normalizer==3.1.0
 cleo==2.0.1
 crashtest==0.4.1
 cryptography==39.0.2
-distlib==0.3.6
+distlib==0.3.9
 dulwich==0.21.3
 filelock==3.9.0
 html5lib==1.1
