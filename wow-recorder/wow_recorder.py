@@ -39,7 +39,7 @@ class Activity:
         self.success = False
 
     def __str__(self):
-        return str({"Type": self.activity_type, "Start": str(self.start_time), "Event count": len(self.events)})
+        return f"{str(self.activity_type)}, {self.name} ({len(self.events)})"
 
     def add_event(self, timestamp: datetime.datetime, event: str):
         delta = timestamp - self.start_time

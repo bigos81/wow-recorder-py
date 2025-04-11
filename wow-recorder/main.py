@@ -10,6 +10,14 @@ from ui.terminal_tricks import hide_cursor, show_cursor, is_running_in_ide, ASCI
 from wow_recorder import Recorder
 from wow.wow_control import WoWController
 
+def ellipsis(msg: str, cnt: int):
+    final = msg
+    if len(msg) > cnt:
+        final = msg[0:cnt-3] + '...'
+    return final
+
+
+
 def main():
     #configuration
     logging.getLogger('obsws_python.baseclient.ObsClient').disabled = True
@@ -49,17 +57,17 @@ def main():
                 print(f"             ┗┻┛┗┛┗┻┛  ┛┗┗┛┗┛┗┛┛┗┻┛┗┛┛┗                web-socket based")
                 print(f"--+--------------------------------------------------------------------")
                 print(f"S | [{spinner.get_spinner()}] Time:     {datetime.datetime.now().strftime("%d.%m.%Y %H:%M:%S")}")
-                print(f"T | OBS Studio:   {str(recorder.obs_controller.connected)}")
-                print(f"A | Log file:     {recorder.wow_controller.log_file_name}")
-                print(f"T | Is recording: {recorder.is_recording()}")
-                print(f"E | Activity:     {str(recorder.activity)}")
+                print(f"T | OBS Studio:   {str(recorder.obs_controller.connected)}".ljust(70))
+                print(f"A | Log file:     {recorder.wow_controller.log_file_name}".ljust(70))
+                print(f"T | Is recording: {recorder.is_recording()}".ljust(70))
+                print(f"E | Activity:     {ellipsis(str(recorder.activity), 70)}".ljust(70))
                 print(f"--+--------------------------------------------------------------------")
                 # 13 lines available
                 i = 0
                 for msg in recorder.message_log:
                     log_entry = f"{log_name[i]} | {msg['time']}: {msg["msg"]}"
                     if len(log_entry) > 70:
-                        log_entry = log_entry[0:66] + '...'
+                        log_entry = log_entry[0:69] + '...'
 
                     print(f"{log_entry.ljust(70)}")
                     i = i + 1
