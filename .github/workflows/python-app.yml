@@ -39,6 +39,7 @@ jobs:
         run: pyinstaller --onefile --console --name=wow-recorder-${{ matrix.os }} main.py
 
       - name: copy script file
+        if: matrix.os == 'ubuntu-latest'
         run: cp wow-recorder.desktop dist/wow-recorder.desktop
 
       - name: Deploy artifacts
