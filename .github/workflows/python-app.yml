@@ -39,10 +39,7 @@ jobs:
         run: pyinstaller --onefile --console --name=wow-recorder-${{ matrix.os }} main.py
 
       - name: copy script file
-        uses: canastro/copy-file-action@master
-        with:
-          source: "run.sh"
-          target: "dist/test-a.txt"
+        run: cp run.sh dist/run.sh
 
       - name: Deploy artifacts
         uses: actions/upload-artifact@v4
