@@ -47,4 +47,4 @@ virtualenv==20.30.0
 virtualenv-clone==0.5.7
 webencodings==0.5.1
 websocket-client==1.8.0
-zipp==3.15.0
+zipp>=3.19.1
