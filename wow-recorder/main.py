@@ -65,11 +65,7 @@ def main():
                 # 13 lines available
                 i = 0
                 for msg in recorder.message_log:
-                    log_entry = f"{log_name[i]} | {msg['time']}: {msg["msg"]}"
-                    if len(log_entry) > 70:
-                        log_entry = log_entry[0:69] + '...'
-
-                    print(f"{log_entry.ljust(70)}")
+                    print(f"{ellipsis(msg, 70).ljust(70)}")
                     i = i + 1
                 print('\033[25A\033[2K', end='')
 
