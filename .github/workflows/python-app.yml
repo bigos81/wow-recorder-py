@@ -5,7 +5,7 @@ on: [push]
 defaults:
   run:
     shell: bash
-    working-directory: app
+    working-directory: wow-recorder
 
 jobs:
   Build:
@@ -36,11 +36,11 @@ jobs:
           pip install -r requirements.txt
 
       - name: Build with pyinstaller
-        run: pyinstaller --onefile --name=app-${{ matrix.os }} main.py
+        run: pyinstaller --onefile --console --name=wow-recorder-${{ matrix.os }} main.py
 
       - name: Deploy artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: app-${{ matrix.os }}
-          path: app/dist/app-${{ matrix.os }}*
+          name: wow-recorder-${{ matrix.os }}
+          path: wow-recorder/dist/wow-recorder-${{ matrix.os }}*
           if-no-files-found: error
