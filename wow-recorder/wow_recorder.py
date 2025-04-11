@@ -5,7 +5,7 @@ import time
 from enum import Enum
 from time import sleep
 
-import obs.obs_control
+from obs.obs_control import OBSController
 from wow.wow_control import WoWController
 from wow.wow_log_parser import parse_wow_log_line
 
@@ -76,9 +76,10 @@ def get_file_extension(dest_file_name):
     return ''
 
 class Recorder:
-    def __init__(self, obs_controller: obs.obs_control.OBSController, wow_controller: WoWController, recording_target_folder: str, death_delay_seconds = 3, linger_time_seconds = 5):
+    def __init__(self, obs_controller: OBSController, wow_controller: WoWController, recording_target_folder: str, death_delay_seconds = 3, linger_time_seconds = 5):
         
-        self.last_message = None
+        self.message_log = []
+        self.message_log_len = 10
         self.linger_time_seconds = linger_time_seconds
         self.death_delay_seconds = death_delay_seconds
         self.recording_target_folder = recording_target_folder
@@ -90,9 +91,9 @@ class Recorder:
     def process(self):
         if not self.obs_controller.connected:
             if not self.obs_controller.connect():
-                self.last_message = "Cannot connect to OBS"
+                self.add_message("Cannot connect to OBS")
             else:
-                self.last_message = "Connection to OBS successful"
+                self.add_message("Connection to OBS successful")
 
         log_line = self.wow_controller.get_log_line()
         if len(log_line) > 0:
@@ -114,25 +115,25 @@ class Recorder:
 
     def start_activity(self, activity: Activity):
         if self.is_recording():
-            self.last_message = "Activity already in progress, cannot start new one"
+            self.add_message("Activity already in progress, cannot start new one")
             return
 
         self.activity = activity
         self.obs_controller.start_recording()
-        self.last_message = "Recording started {0}".format(self.activity)
+        self.add_message("Recording started {0}".format(self.activity))
 
     def end_activity(self, success):
         if not self.is_recording():
-            self.last_message = "Cannot end non-active Activity"
+            self.add_message("Cannot end non-active Activity")
             return
         self.activity.success = success
 
         if self.linger_time_seconds > 0:
-            self.last_message = f"Lingering recording time by {self.linger_time_seconds} seconds..."
+            self.add_message(f"Lingering recording time by {self.linger_time_seconds} seconds...")
             time.sleep(self.linger_time_seconds)
 
         recording_path = self.obs_controller.end_recording()
-        self.last_message = "Recording finished: {0}".format(recording_path)
+        self.add_message("Recording finished: {0}".format(recording_path))
         self.handle_recording(recording_path)
         self.activity = None
 
@@ -204,7 +205,7 @@ class Recorder:
                         dead_player = result["rest"][6].replace('"','')
                         self.activity.add_event(timestamp - datetime.timedelta(seconds=self.death_delay_seconds), "Death: {0}".format(dead_player))
 
-
-
-
-
+    def add_message(self, message):
+        if len(self.message_log) == self.message_log_len:
+            self.message_log.pop(0)
+        self.message_log.append({"time": datetime.datetime.now().strftime('%H:%M:%S'), "msg": message})

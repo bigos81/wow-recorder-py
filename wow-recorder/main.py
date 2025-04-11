@@ -39,21 +39,28 @@ def main():
         try:
             hide_cursor()
             spinner = ASCIISpinner()
+            log_name = ['L', 'O', 'G', ' ', ' ', ' ', ' ', ' ', ' ', ' ']
             while True:
                 print('\033[18A\033[2K', end='')
                 recorder.process()
-                last_msg_formatted = recorder.last_message
-                if len(str(last_msg_formatted)) > 93:
-                    last_msg_formatted = last_msg_formatted[0:90] + '...'
-                print(f"/---------------------------------------------WOW RECORDER--------------------------------------------------\\")
-                print(f"| [{spinner.get_spinner()}] Time:     {datetime.datetime.now().strftime("%d.%m.%Y %H:%M:%S")}                                                                         |")
-                print(f"| OBS Studio:   {str(recorder.obs_controller.connected)} {' '*(110-19-len(str(recorder.obs_controller.connected)))}|")
-                print(f"| Log file:     {recorder.wow_controller.log_file_name} {' '*(110-19-len(recorder.wow_controller.log_file_name))}|")
-                print(f"| Is recording: {recorder.is_recording()} {' '*(110-19-len(str(recorder.is_recording())))}|")
-                print(f"| Activity:     {str(recorder.activity)} {' '*(110-19-len(str(recorder.activity)))}|")
-                print(f"| Last message: {last_msg_formatted} {' '*(110-19-len(str(last_msg_formatted)))}|")
-                print(f"\\-[q to quit]------------------------------------------------------------------------------[(c) bigos 2025]-/")
-                print('\033[18A\033[2K', end='')
+                print(f"                                                                        ")
+                print(f"             ┓ ┏┏┓┓ ┏  ┳┓┏┓┏┓┏┓┳┓┳┓┏┓┳┓                   python powered")
+                print(f"             ┃┃┃┃┃┃┃┃  ┣┫┣ ┃ ┃┃┣┫┃┃┣ ┣┫                   cross-platform")
+                print(f"             ┗┻┛┗┛┗┻┛  ┛┗┗┛┗┛┗┛┛┗┻┛┗┛┛┗                 web-socket based")
+                print(f"--+---------------------------------------------------------------------")
+                print(f"S | [{spinner.get_spinner()}] Time:     {datetime.datetime.now().strftime("%d.%m.%Y %H:%M:%S")}")
+                print(f"T | OBS Studio:   {str(recorder.obs_controller.connected)}")
+                print(f"A | Log file:     {recorder.wow_controller.log_file_name}")
+                print(f"T | Is recording: {recorder.is_recording()}")
+                print(f"U | Activity:     {str(recorder.activity)}")
+                print(f"--+---------------------------------------------------------------------")
+                i = 0
+                for msg in recorder.message_log:
+                    print(f"{log_name[i]} | {msg['time']}: {msg["msg"]}")
+                    i = i + 1
+                #13 lines available
+                print('\033[25A\033[2K', end='')
+
         except Exception as e:
             print(e)
         finally:
