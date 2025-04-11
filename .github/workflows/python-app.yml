@@ -39,7 +39,7 @@ jobs:
         run: pyinstaller --onefile --console --name=wow-recorder-${{ matrix.os }} main.py
 
       - name: copy script file
-        run: cp run.sh dist/run.sh
+        run: cp wow-recorder.desktop dist/wow-recorder.desktop
 
       - name: Deploy artifacts
         uses: actions/upload-artifact@v4
@@ -47,5 +47,5 @@ jobs:
           name: wow-recorder-${{ matrix.os }}
           path: | 
             wow-recorder/dist/wow-recorder-${{ matrix.os }}*
-            wow-recorder/dist/run.sh
+            wow-recorder/dist/wow-recorder.desktop
           if-no-files-found: error

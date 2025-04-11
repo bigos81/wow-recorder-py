@@ -1,0 +1,17 @@
+[Desktop Entry]
+Comment[en_GB]=
+Comment=
+Exec=bash -c '"$(dirname "$1")"/wow-recorder-ubuntu-latest' dummy %k
+GenericName[en_GB]=
+GenericName=
+Icon=camera-video
+MimeType=
+Name[en_GB]=WoW Recorder
+Name=WoW Recorder
+Path=
+StartupNotify=true
+Terminal=true
+TerminalOptions=
+Type=Application
+X-KDE-SubstituteUID=false
+X-KDE-Username=
