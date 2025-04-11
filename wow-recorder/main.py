@@ -52,7 +52,7 @@ def main():
                 print(f"T | OBS Studio:   {str(recorder.obs_controller.connected)}")
                 print(f"A | Log file:     {recorder.wow_controller.log_file_name}")
                 print(f"T | Is recording: {recorder.is_recording()}")
-                print(f"U | Activity:     {str(recorder.activity)}")
+                print(f"E | Activity:     {str(recorder.activity)}")
                 print(f"--+--------------------------------------------------------------------")
                 # 13 lines available
                 i = 0
