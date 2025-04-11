@@ -1,3 +1,3 @@
 #!/bin/bash
 clear
-python main.py
+python app/main.py
