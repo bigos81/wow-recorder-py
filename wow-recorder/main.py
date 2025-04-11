@@ -1,3 +1,5 @@
+#!/usr/bin/python
+
 from time import sleep
 
 import datetime
@@ -42,14 +44,14 @@ def main():
                 last_msg_formatted = recorder.last_message
                 if len(str(last_msg_formatted)) > 93:
                     last_msg_formatted = last_msg_formatted[0:90] + '...'
-                print('888       888          888       888      8888888b.                                       888')
-                print('888   o   888          888   o   888      888   Y88b                                      888')
-                print('888  d8b  888          888  d8b  888      888    888                                      888')
-                print('888 d888b 888  .d88b.  888 d888b 888      888   d88P .d88b.   .d8888b .d88b.  888d888 .d88888  .d88b.  888d888')
-                print('888d88888b888 d88""88b 888d88888b888      8888888P" d8P  Y8b d88P"   d88""88b 888P"  d88" 888 d8P  Y8b 888P"')
-                print('88888P Y88888 888  888 88888P Y88888      888 T88b  88888888 888     888  888 888    888  888 88888888 888')
-                print('8888P   Y8888 Y88..88P 8888P   Y8888      888  T88b Y8b.     Y88b.   Y88..88P 888    Y88b 888 Y8b.     888')
-                print('888P     Y888  "Y88P"  888P     Y888      888   T88b "Y8888   "Y8888P "Y88P"  888     "Y88888  "Y8888  888')
+                print('888       888          888       888    8888888b.                                       888')
+                print('888   o   888          888   o   888    888   Y88b                                      888')
+                print('888  d8b  888          888  d8b  888    888    888                                      888')
+                print('888 d888b 888  .d88b.  888 d888b 888    888   d88P .d88b.   .d8888b .d88b.  888d888 .d88888  .d88b.  888d888')
+                print('888d88888b888 d88""88b 888d88888b888    8888888P" d8P  Y8b d88P"   d88""88b 888P"  d88" 888 d8P  Y8b 888P"')
+                print('88888P Y88888 888  888 88888P Y88888    888 T88b  88888888 888     888  888 888    888  888 88888888 888')
+                print('8888P   Y8888 Y88..88P 8888P   Y8888    888  T88b Y8b.     Y88b.   Y88..88P 888    Y88b 888 Y8b.     888')
+                print('888P     Y888  "Y88P"  888P     Y888    888   T88b "Y8888   "Y8888P "Y88P"  888     "Y88888  "Y8888  888')
                 print('')
                 print(f"/-------------------------------------------------------------------------------------------------------------\\")
                 print(f"| [{spinner.get_spinner()}] Time:     {datetime.datetime.now().strftime("%d.%m.%Y %H:%M:%S")}                                                                           |")
