@@ -91,7 +91,8 @@ class Recorder:
     def process(self):
         if not self.obs_controller.connected:
             if not self.obs_controller.connect():
-                self.add_message("Cannot connect to OBS")
+                self.add_message("Cannot connect to OBS, waiting 3 seconds to retry...")
+                sleep(3)
             else:
                 self.add_message("Connection to OBS successful")
 

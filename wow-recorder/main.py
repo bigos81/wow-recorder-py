@@ -41,24 +41,28 @@ def main():
             spinner = ASCIISpinner()
             log_name = ['L', 'O', 'G', ' ', ' ', ' ', ' ', ' ', ' ', ' ']
             while True:
-                print('\033[18A\033[2K', end='')
+                print('\033[25A\033[2K', end='')
                 recorder.process()
-                print(f"                                                                        ")
-                print(f"             ┓ ┏┏┓┓ ┏  ┳┓┏┓┏┓┏┓┳┓┳┓┏┓┳┓                   python powered")
-                print(f"             ┃┃┃┃┃┃┃┃  ┣┫┣ ┃ ┃┃┣┫┃┃┣ ┣┫                   cross-platform")
-                print(f"             ┗┻┛┗┛┗┻┛  ┛┗┗┛┗┛┗┛┛┗┻┛┗┛┛┗                 web-socket based")
-                print(f"--+---------------------------------------------------------------------")
+                print(f"                                                                       ")
+                print(f"             ┓ ┏┏┓┓ ┏  ┳┓┏┓┏┓┏┓┳┓┳┓┏┓┳┓                  python powered")
+                print(f"             ┃┃┃┃┃┃┃┃  ┣┫┣ ┃ ┃┃┣┫┃┃┣ ┣┫                  cross-platform")
+                print(f"             ┗┻┛┗┛┗┻┛  ┛┗┗┛┗┛┗┛┛┗┻┛┗┛┛┗                web-socket based")
+                print(f"--+--------------------------------------------------------------------")
                 print(f"S | [{spinner.get_spinner()}] Time:     {datetime.datetime.now().strftime("%d.%m.%Y %H:%M:%S")}")
                 print(f"T | OBS Studio:   {str(recorder.obs_controller.connected)}")
                 print(f"A | Log file:     {recorder.wow_controller.log_file_name}")
                 print(f"T | Is recording: {recorder.is_recording()}")
                 print(f"U | Activity:     {str(recorder.activity)}")
-                print(f"--+---------------------------------------------------------------------")
+                print(f"--+--------------------------------------------------------------------")
+                # 13 lines available
                 i = 0
                 for msg in recorder.message_log:
-                    print(f"{log_name[i]} | {msg['time']}: {msg["msg"]}")
+                    log_entry = f"{log_name[i]} | {msg['time']}: {msg["msg"]}"
+                    if len(log_entry) > 70:
+                        log_entry = log_entry[0:66] + '...'
+
+                    print(f"{log_entry.ljust(70)}")
                     i = i + 1
-                #13 lines available
                 print('\033[25A\033[2K', end='')
 
         except Exception as e:
