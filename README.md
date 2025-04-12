@@ -5,7 +5,7 @@ In order to achieve that the OBS integration is done by web socket to make this 
 
 # Capabilities
 The application is 
-- Connecting to OBS Studio via web-socket client to be able to toggle the recording on and off and manage the completed recording afterwards
+- Connecting to OBS Studio via web-socket client to be able to toggle the recording on and off and manage the completed recording afterward
 - Monitoring World of Warcraft log file to figure out whether a significant activity is happening, significant activities include:
   - Mythic Plus key run start
   - Mythic Raid boss encounter start
@@ -29,20 +29,19 @@ The application is
    
    ![image](https://github.com/user-attachments/assets/0468eced-5efc-4f46-a6fb-8212be5ca03c)
 
-   Check the "Enable WebSocket server" check box, fill in Server Port edit box, check Enable Authetiocation check box, set up the Server Password
+   Check the "Enable WebSocket server" check box, fill in Server Port edit box, check Enable Authentication check box, set up the Server Password
    
    ![image](https://github.com/user-attachments/assets/41f144d4-9151-4d58-bef5-beffca2aba69)
 
+3. Set up OBS scene
 
-4. Set up OBS scene
-
-   Make sure you OBS Studio is configured to capture the scene of the game when turned on. The recorder will only ask the OBS to start and end recording without setting the scene, overlays, audio options etc. This means it's up to you to configre the scene, audio and output video settings properly. It should look something like this:
+   Make sure you OBS Studio is configured to capture the scene of the game when turned on. The recorder will only ask the OBS to start and end recording without setting the scene, overlays, audio options etc. This means it's up to you to configure the scene, audio and output video settings properly. It should look something like this:
 
    ![image](https://github.com/user-attachments/assets/95381855-5892-435f-889a-c203c421e891)
 
-   Where the Worlg of Warcraft window is selected as a scene, some overlay hiding the chat box (optional of course) and audio settings are set.
+   Where the World of Warcraft window is selected as a scene, some overlay hiding the chat box (optional of course) and audio settings are set.
 
-6. Set up the configuration in `wow_recorder_py.cfg`
+4. Set up the configuration in `wow_recorder_py.cfg`
    
     [OBS] section
    - `host` probably localhost in the way you want to go with, 127.0.0.1 should also work for OBS running at the same host as the recorder and WoW client
@@ -57,10 +56,10 @@ The application is
     - `death_delay` amount of seconds to subtract from death event in the video, such that the timestamp is X seconds before the logged death event
     - `linger_time` amount of seconds to wait until finishing the recording after the activity ended
     - `reset_time` amount of seconds considered a length of activity to be considered as reset for a boss
-7. Configure World of Warcraft
+5. Configure World of Warcraft
 
    It's important that your World of Warcraft will be running combat log logging, for the recorder to read. You can toggle logging manually by issuing a console command `/combatlog` or use any of existing addons to log your keys and raids for you. I'd recommend raider.io wow addon to do it for you (https://raider.io/addon). Any other addon will do, just make sure you are logging, otherwise the recorder will bot have a clue where to start and end recording of your activities.
-9. Run the recorder software - make sure you see it's console output, it will show you the status of recording etc. If you are fine, this is how the terminal should look like when running the software:
+6. Run the recorder software - make sure you see it's console output, it will show you the status of recording etc. If you are fine, this is how the terminal should look like when running the software:
 
     ![image](https://github.com/user-attachments/assets/4457e894-2cf8-4c20-8232-bbe7944525c8)
 
