@@ -1,10 +1,10 @@
 #!/usr/bin/python
 import sys
-from sys import exception
 from time import sleep
 
 import datetime
 import logging
+from keyboard import read_key
 
 from obs.obs_control import OBSController
 from ui.terminal_tricks import hide_cursor, show_cursor, is_running_in_ide, ASCIISpinner
@@ -32,7 +32,8 @@ def main():
         conf = RecorderConfiguration(cfg_file)
         conf.validate_config()
     except Exception as e:
-        print(f"Configuration issue: {str(e)}")
+        print(f"Configuration issue: {str(e)}. Press any key to exit...")
+        read_key()
         exit(1)
 
     host = conf.get_obs_host()
@@ -85,7 +86,8 @@ def main():
                 print('\033[25A\033[2K', end='')
 
         except Exception as e:
-            print(f"Unexpected program error: {str(e)}")
+            print(f"Unexpected program error: {str(e)}. Press any key to exit...")
+            read_key()
         finally:
             show_cursor()
 
