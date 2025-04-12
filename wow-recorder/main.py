@@ -1,4 +1,5 @@
 #!/usr/bin/python
+import sys
 from sys import exception
 from time import sleep
 
@@ -21,9 +22,14 @@ def str_ellipsis(msg: str, cnt: int):
 def main():
     logging.getLogger('obsws_python.baseclient.ObsClient').disabled = True
     conf = None
+
+    cfg_file = 'wow_recorder_py.cfg'
+    if len(sys.argv) > 1:
+        cfg_file = sys.argv[1]
+
     # configuration
     try:
-        conf = RecorderConfiguration('wow_recorder_py.cfg')
+        conf = RecorderConfiguration(cfg_file)
         conf.validate_config()
     except Exception as e:
         print(f"Configuration issue: {str(e)}")

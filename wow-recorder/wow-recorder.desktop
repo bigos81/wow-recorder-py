@@ -2,7 +2,7 @@
 [Desktop Entry]
 Comment[en_GB]=
 Comment=
-Exec=bash -c '"$(dirname "$1")"/wow-recorder-ubuntu-latest' dummy %k
+Exec=bash -c '"$(dirname "$1")"/wow-recorder-ubuntu-latest "$(dirname "$1")"/wow_recorder_py.cfg' dummy %k
 GenericName[en_GB]=
 GenericName=
 Icon=camera-video
