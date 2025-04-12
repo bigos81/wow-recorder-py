@@ -1,5 +1,5 @@
 #!/usr/bin/python
-
+from sys import exception
 from time import sleep
 
 import datetime
@@ -8,6 +8,7 @@ import logging
 from obs.obs_control import OBSController
 from ui.terminal_tricks import hide_cursor, show_cursor, is_running_in_ide, ASCIISpinner
 from wow_recorder import Recorder
+from config import RecorderConfiguration
 from wow.wow_control import WoWController
 
 def str_ellipsis(msg: str, cnt: int):
@@ -17,21 +18,30 @@ def str_ellipsis(msg: str, cnt: int):
     return final
 
 
-
 def main():
-    #configuration
     logging.getLogger('obsws_python.baseclient.ObsClient').disabled = True
-    host = 'localhost'
-    port = 4455
-    password = 'zbnfiosglNUQTbjJ'
-    log_folder = '/home/bigos/Games/battlenet/drive_c/Program Files (x86)/World of Warcraft/_retail_/Logs/'
-    output_path = '/home/bigos/Capture/recorder/'
-    death_delay_seconds = 3
+    conf = None
+    # configuration
+    try:
+        conf = RecorderConfiguration('wow_recorder_py.cfg')
+        conf.validate_config()
+    except Exception as e:
+        print(f"Configuration issue: {str(e)}")
+        exit(1)
+
+    host = conf.get_obs_host()
+    port = conf.get_obs_port()
+    password = conf.get_obs_password()
+    log_folder = conf.get_wow_log_folder()
+    output_path = conf.get_recorder_output_path()
+    death_delay_seconds = conf.get_recorder_death_delay()
+    linger_time = conf.get_recorder_linger_time()
+    reset_time = conf.get_recorder_reset_time()
 
     wow_controller = WoWController(log_folder)
     obs_controller = OBSController(host, port, password)
 
-    recorder = Recorder(obs_controller, wow_controller, output_path, death_delay_seconds)
+    recorder = Recorder(obs_controller, wow_controller, output_path, death_delay_seconds, linger_time, reset_time)
 
     if is_running_in_ide():
         while True:
@@ -47,7 +57,6 @@ def main():
         try:
             hide_cursor()
             spinner = ASCIISpinner()
-            log_name = ['L', 'O', 'G', ' ', ' ', ' ', ' ', ' ', ' ', ' ']
             while True:
                 print('\033[25A\033[2K', end='')
                 recorder.process()
@@ -69,8 +78,8 @@ def main():
                     i = i + 1
                 print('\033[25A\033[2K', end='')
 
-        #except Exception as e:
-         #   print(e)
+        except Exception as e:
+            print(f"Unexpected program error: {str(e)}")
         finally:
             show_cursor()
 

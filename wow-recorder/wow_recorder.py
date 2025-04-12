@@ -76,8 +76,9 @@ def get_file_extension(dest_file_name):
     return ''
 
 class Recorder:
-    def __init__(self, obs_controller: OBSController, wow_controller: WoWController, recording_target_folder: str, death_delay_seconds = 3, linger_time_seconds = 5):
+    def __init__(self, obs_controller: OBSController, wow_controller: WoWController, recording_target_folder: str, death_delay_seconds = 3, linger_time_seconds = 5, boss_reset = 30):
         
+        self.boss_reset_time_seconds = boss_reset
         self.message_log = []
         self.message_log_len = 10
         self.linger_time_seconds = linger_time_seconds
@@ -139,7 +140,7 @@ class Recorder:
         self.activity = None
 
     def handle_recording(self, recording_path):
-        if (datetime.datetime.now() - self.activity.start_time).total_seconds() < 30:
+        if (datetime.datetime.now() - self.activity.start_time).total_seconds() < self.boss_reset_time_seconds:
             #boss reset
             os.remove(recording_path)
             return
