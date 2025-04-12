@@ -28,6 +28,7 @@ class RecorderConfiguration:
         value = self.config['OBS']['password']
         if 'CHANGE_ME!' == value:
             raise Exception('Configuration file not valid, password for OBS not set (is default value)')
+        return value
 
     def get_wow_log_folder(self):
         return self.config['WOW']['log_folder']
