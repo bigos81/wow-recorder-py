@@ -109,12 +109,6 @@ class Recorder:
                 sleep(0)
 
 
-    # main loop
-    def start(self):
-        self.obs_controller.connect()
-        while True:
-            self.process()
-
     def start_activity(self, activity: Activity):
         if self.is_recording():
             self.add_message("Activity already in progress, cannot start new one")
@@ -211,3 +205,4 @@ class Recorder:
         if len(self.message_log) == self.message_log_len:
             self.message_log.pop(0)
         self.message_log.append({"time": datetime.datetime.now().strftime('%H:%M:%S'), "msg": message})
+

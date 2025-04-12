@@ -4,7 +4,6 @@ from time import sleep
 
 import datetime
 import logging
-from keyboard import read_key
 
 from obs.obs_control import OBSController
 from ui.terminal_tricks import hide_cursor, show_cursor, is_running_in_ide, ASCIISpinner
@@ -33,7 +32,7 @@ def main():
         conf.validate_config()
     except Exception as e:
         print(f"Configuration issue: {str(e)}. Press any key to exit...")
-        read_key()
+        input()
         exit(1)
 
     host = conf.get_obs_host()
@@ -50,46 +49,35 @@ def main():
 
     recorder = Recorder(obs_controller, wow_controller, output_path, death_delay_seconds, linger_time, reset_time)
 
-    if is_running_in_ide():
+    try:
+        hide_cursor()
+        spinner = ASCIISpinner()
         while True:
-            if not recorder.obs_controller.connect():
-                print("Cannot connect to OBS, will retry in 10 seconds...")
-                sleep(10)
-                continue
+            print('\033[25A\033[2K', end='')
             recorder.process()
-            if recorder.last_message is not None:
-                print(recorder.last_message)
-                recorder.last_message = None
-    else:
-        try:
-            hide_cursor()
-            spinner = ASCIISpinner()
-            while True:
-                print('\033[25A\033[2K', end='')
-                recorder.process()
-                print(f"                                                                       ")
-                print(f"             ┓ ┏┏┓┓ ┏  ┳┓┏┓┏┓┏┓┳┓┳┓┏┓┳┓                  python powered")
-                print(f"             ┃┃┃┃┃┃┃┃  ┣┫┣ ┃ ┃┃┣┫┃┃┣ ┣┫                  cross-platform")
-                print(f"             ┗┻┛┗┛┗┻┛  ┛┗┗┛┗┛┗┛┛┗┻┛┗┛┛┗                web-socket based")
-                print(f"--+--------------------------------------------------------------------")
-                print(f"S | [{spinner.get_spinner()}] Time:     {datetime.datetime.now().strftime("%d.%m.%Y %H:%M:%S")}")
-                print(str_ellipsis(f"T | OBS Studio:   {str(recorder.obs_controller.connected)}", 70).ljust(70))
-                print(str_ellipsis(f"A | Log file:     {recorder.wow_controller.log_file_name}", 70).ljust(70))
-                print(str_ellipsis(f"T | Is recording: {recorder.is_recording()}", 70).ljust(70))
-                print(str_ellipsis(f"E | Activity:     {str(recorder.activity)}", 70).ljust(70))
-                print(f"--+--------------------------------------------------------------------")
-                # 13 lines available
-                i = 0
-                for msg in recorder.message_log:
-                    print(f"{msg['time']}: {str_ellipsis(msg['msg'], 62)}".ljust(70))
-                    i = i + 1
-                print('\033[25A\033[2K', end='')
+            print(f"                                                                       ")
+            print(f"             ┓ ┏┏┓┓ ┏  ┳┓┏┓┏┓┏┓┳┓┳┓┏┓┳┓                  python powered")
+            print(f"             ┃┃┃┃┃┃┃┃  ┣┫┣ ┃ ┃┃┣┫┃┃┣ ┣┫                  cross-platform")
+            print(f"             ┗┻┛┗┛┗┻┛  ┛┗┗┛┗┛┗┛┛┗┻┛┗┛┛┗                web-socket based")
+            print(f"--+--------------------------------------------------------------------")
+            print(f"S | [{spinner.get_spinner()}] Time:     {datetime.datetime.now().strftime("%d.%m.%Y %H:%M:%S")}")
+            print(str_ellipsis(f"T | OBS Studio:   {str(recorder.obs_controller.connected)}", 70).ljust(70))
+            print(str_ellipsis(f"A | Log file:     {recorder.wow_controller.log_file_name}", 70).ljust(70))
+            print(str_ellipsis(f"T | Is recording: {recorder.is_recording()}", 70).ljust(70))
+            print(str_ellipsis(f"E | Activity:     {str(recorder.activity)}", 70).ljust(70))
+            print(f"--+--------------------------------------------------------------------")
+            # 13 lines available
+            i = 0
+            for msg in recorder.message_log:
+                print(f"{msg['time']}: {str_ellipsis(msg['msg'], 62)}".ljust(70))
+                i = i + 1
+            print('\033[25A\033[2K', end='')
 
-        except Exception as e:
-            print(f"Unexpected program error: {str(e)}. Press any key to exit...")
-            read_key()
-        finally:
-            show_cursor()
+    except Exception as e:
+        print(f"Unexpected program error: {str(e)}. Press any key to exit...")
+        input()
+    finally:
+        show_cursor()
 
 if __name__ == "__main__":
     main()
