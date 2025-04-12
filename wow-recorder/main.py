@@ -10,10 +10,10 @@ from ui.terminal_tricks import hide_cursor, show_cursor, is_running_in_ide, ASCI
 from wow_recorder import Recorder
 from wow.wow_control import WoWController
 
-def ellipsis(msg: str, cnt: int):
+def str_ellipsis(msg: str, cnt: int):
     final = msg
     if len(msg) > cnt:
-        final = msg[0:cnt-3] + '...'
+        final = msg[0:cnt-4] + '...'
     return final
 
 
@@ -57,20 +57,20 @@ def main():
                 print(f"             ┗┻┛┗┛┗┻┛  ┛┗┗┛┗┛┗┛┛┗┻┛┗┛┛┗                web-socket based")
                 print(f"--+--------------------------------------------------------------------")
                 print(f"S | [{spinner.get_spinner()}] Time:     {datetime.datetime.now().strftime("%d.%m.%Y %H:%M:%S")}")
-                print(f"T | OBS Studio:   {str(recorder.obs_controller.connected)}".ljust(70))
-                print(f"A | Log file:     {recorder.wow_controller.log_file_name}".ljust(70))
-                print(f"T | Is recording: {recorder.is_recording()}".ljust(70))
-                print(f"E | Activity:     {ellipsis(str(recorder.activity), 70)}".ljust(70))
+                print(str_ellipsis(f"T | OBS Studio:   {str(recorder.obs_controller.connected)}", 70).ljust(70))
+                print(str_ellipsis(f"A | Log file:     {recorder.wow_controller.log_file_name}", 70).ljust(70))
+                print(str_ellipsis(f"T | Is recording: {recorder.is_recording()}", 70).ljust(70))
+                print(str_ellipsis(f"E | Activity:     {str(recorder.activity)}", 70).ljust(70))
                 print(f"--+--------------------------------------------------------------------")
                 # 13 lines available
                 i = 0
                 for msg in recorder.message_log:
-                    print(f"{ellipsis(msg, 70).ljust(70)}")
+                    print(f"{msg['time']}: {str_ellipsis(msg['msg'], 62)}".ljust(70))
                     i = i + 1
                 print('\033[25A\033[2K', end='')
 
-        except Exception as e:
-            print(e)
+        #except Exception as e:
+         #   print(e)
         finally:
             show_cursor()
 
