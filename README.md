@@ -61,14 +61,14 @@ The application is
     - `reset_time` amount of seconds considered a length of activity to be considered as reset for a boss
 5. Configure World of Warcraft
 
-   It's important that your World of Warcraft will be running combat log logging, for the recorder to read. You can toggle logging manually by issuing a console command `/combatlog` or use any of existing addons to log your keys and raids for you. I'd recommend raider.io wow addon to do it for you (https://raider.io/addon). Any other addon will do, just make sure you are logging, otherwise the recorder will bot have a clue where to start and end recording of your activities.
+   It's important that your World of Warcraft will be running combat log logging, for the recorder to read. You can toggle logging manually by issuing a console command `/combatlog` or use any of existing addons to log your keys and raids for you. I'd recommend raider.io wow addon to do it for you (https://raider.io/addon). Any other addon will do, just make sure you are logging, otherwise the recorder will not have a clue where to start and end recording of your activities.
 6. Run the recorder software - make sure you see it's console output, it will show you the status of recording etc. If you are fine, this is how the terminal should look like when running the software:
 
     ![image](https://github.com/user-attachments/assets/4457e894-2cf8-4c20-8232-bbe7944525c8)
 
 
 # Expansion points
-This is just a simple application for now, the additional features that can be added depends on whether I or anyone else would be interested in them. Handling more events, difficulties and raid types are all on the table, provided anyone would use them :)
+This is just a simple application for now, the additional features that can be added depend on whether I or anyone else would be interested in them. Handling more events, difficulties, raid types or arenas/battlegrounds are all on the table, provided anyone would use them :)
 If you are interested in those - let me know via GitHub, it's always way more encouraging to work on something someone would actually use.
 
 # Want to be nice?
