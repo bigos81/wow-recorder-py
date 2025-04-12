@@ -1,6 +1,5 @@
 #!/usr/bin/python
 import sys
-from time import sleep
 
 import datetime
 import logging
