@@ -9,7 +9,10 @@ The application is
 - Monitoring World of Warcraft log file to figure out whether a significant activity is happening, significant activities include:
   - Mythic Plus key run start
   - Mythic Raid boss encounter start
-- Monitoring World of Warcraft log file to gather significant events during the recording
+- Monitoring World of Warcraft log file to gather significant events during the recording, significant events include:
+  - Player death (both M+ and Raid)
+  - Boss kill (M+ only)
+  - Boss wipe (M+ only)
 - Monitoring World of Warcraft log file to trigger end of a recording
 - Handling the recorded OBS Studio video file by:
   - Moving it from OBS output folder to desired configured recorder output folder
