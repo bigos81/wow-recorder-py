@@ -52,4 +52,5 @@ jobs:
           path: | 
             wow-recorder/dist/wow-recorder-${{ matrix.os }}*
             wow-recorder/dist/wow-recorder.desktop
+            wow-recorder/dist/wow_recorder_py.cfg
           if-no-files-found: error
