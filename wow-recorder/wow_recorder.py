@@ -57,7 +57,7 @@ def make_file_name(activity):
     if activity.activity_type == ActivityType.M_PLUS:
         activity_type = 'M_PLUS'
         duration = (datetime.datetime.now() - activity.start_time).total_seconds() / 60
-        result = f"{int(duration)}_min"
+        result = f"{activity.key_level}__{int(duration)}_min"
     if activity.activity_type == ActivityType.RAID:
         activity_type = 'RAID'
         if activity.success:
