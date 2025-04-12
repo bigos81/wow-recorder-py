@@ -17,7 +17,7 @@ The application is
   - Storing `.evt` file containing timestamps of significant events during the recording, the time is expressed in time of the video file
 
 # Quick start
-1. Download the latest release from here: https://github.com/bigos81/wow-recorder-py/releases and unpack the contents
+1. Download the latest release from here: https://github.com/bigos81/wow-recorder-py/releases and unpack the contents, if you are willing to test latest version, use the latest GitHub Action artifacts, found here: https://github.com/bigos81/wow-recorder-py/actions
 
     Release archive should contain:
     - `wow-recorder-XXX-latest` binary, where XXX stands for platform the binary is created for
