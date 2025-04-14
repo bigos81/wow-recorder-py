@@ -151,6 +151,12 @@ class Recorder:
 
     def handle_recording(self, recording_path):
         """Handles recording file after Activity is finished"""
+        recording_duration = (datetime.datetime.now() - self.activity.start_time).total_seconds()
+        if recording_duration < self.configuration.boss_reset:
+            self.add_message(f"Recording is only {recording_duration} seconds long, assuming reset")
+            os.remove(recording_path)
+            return
+
         if not os.path.exists(self.configuration.recording_target_folder):
             os.makedirs(self.configuration.recording_target_folder)
 
