@@ -29,6 +29,7 @@ jobs:
 
   Build:
     name: Build release binaries
+    needs: Lint
 
     strategy:
       fail-fast: false
