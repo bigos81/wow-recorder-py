@@ -1,3 +1,4 @@
+"""Main entry point of application"""
 #!/usr/bin/python
 import sys
 
@@ -5,12 +6,14 @@ import datetime
 import logging
 
 from obs.obs_control import OBSController
-from ui.terminal_tricks import hide_cursor, show_cursor, is_running_in_ide, ASCIISpinner
+from ui.terminal_tricks import hide_cursor, show_cursor, ASCIISpinner
 from wow_recorder import Recorder
 from config import RecorderConfiguration
 from wow.wow_control import WoWController
 
+
 def str_ellipsis(msg: str, cnt: int):
+    """Shortens the string and ass ... at the end"""
     final = msg
     if len(msg) > cnt:
         final = msg[0:cnt-4] + '...'
@@ -18,6 +21,7 @@ def str_ellipsis(msg: str, cnt: int):
 
 
 def main():
+    """Main app function"""
     logging.getLogger('obsws_python.baseclient.ObsClient').disabled = True
     conf = None
 
@@ -32,21 +36,20 @@ def main():
     except Exception as e:
         print(f"Configuration issue: {str(e)}. Press any key to exit...")
         input()
-        exit(1)
+        sys.exit(1)
 
-    host = conf.get_obs_host()
-    port = conf.get_obs_port()
-    password = conf.get_obs_password()
-    log_folder = conf.get_wow_log_folder()
     output_path = conf.get_recorder_output_path()
     death_delay_seconds = conf.get_recorder_death_delay()
     linger_time = conf.get_recorder_linger_time()
     reset_time = conf.get_recorder_reset_time()
 
-    wow_controller = WoWController(log_folder)
-    obs_controller = OBSController(host, port, password)
+    wow_controller = WoWController(conf.get_wow_log_folder())
+    obs_controller = OBSController(conf.get_obs_host(),
+                                   conf.get_obs_port(),
+                                   conf.get_obs_password())
 
-    recorder = Recorder(obs_controller, wow_controller, output_path, death_delay_seconds, linger_time, reset_time)
+    recorder = Recorder(obs_controller, wow_controller, output_path,
+                        death_delay_seconds, linger_time, reset_time)
 
     try:
         hide_cursor()
@@ -54,17 +57,22 @@ def main():
         while True:
             print('\033[25A\033[2K', end='')
             recorder.process()
-            print(f"                                                                       ")
-            print(f"             ┓ ┏┏┓┓ ┏  ┳┓┏┓┏┓┏┓┳┓┳┓┏┓┳┓                  python powered")
-            print(f"             ┃┃┃┃┃┃┃┃  ┣┫┣ ┃ ┃┃┣┫┃┃┣ ┣┫                  cross-platform")
-            print(f"             ┗┻┛┗┛┗┻┛  ┛┗┗┛┗┛┗┛┛┗┻┛┗┛┛┗                web-socket based")
-            print(f"--+--------------------------------------------------------------------")
-            print(f"S | [{spinner.get_spinner()}] Time:     {datetime.datetime.now().strftime("%d.%m.%Y %H:%M:%S")}")
-            print(str_ellipsis(f"T | OBS Studio:   {str(recorder.obs_controller.connected)}", 70).ljust(70))
-            print(str_ellipsis(f"A | Log file:     {recorder.wow_controller.log_file_name}", 70).ljust(70))
-            print(str_ellipsis(f"T | Is recording: {recorder.is_recording()}", 70).ljust(70))
-            print(str_ellipsis(f"E | Activity:     {str(recorder.activity)}", 70).ljust(70))
-            print(f"--+--------------------------------------------------------------------")
+            print("                                                                       ")
+            print("             ┓ ┏┏┓┓ ┏  ┳┓┏┓┏┓┏┓┳┓┳┓┏┓┳┓                  python powered")
+            print("             ┃┃┃┃┃┃┃┃  ┣┫┣ ┃ ┃┃┣┫┃┃┣ ┣┫                  cross-platform")
+            print("             ┗┻┛┗┛┗┻┛  ┛┗┗┛┗┛┗┛┛┗┻┛┗┛┛┗                web-socket based")
+            print("--+--------------------------------------------------------------------")
+            print(f"S | [{spinner.get_spinner()}] Time:     "
+                  f"{datetime.datetime.now().strftime('%d.%m.%Y %H:%M:%S')}")
+            print(str_ellipsis(f"T | OBS Studio:   "
+                               f"{str(recorder.obs_controller.connected)}", 70).ljust(70))
+            print(str_ellipsis(f"A | Log file:     "
+                               f"{recorder.wow_controller.log_file_name}", 70).ljust(70))
+            print(str_ellipsis(f"T | Is recording: "
+                               f"{recorder.is_recording()}", 70).ljust(70))
+            print(str_ellipsis(f"E | Activity:     "
+                               f"{str(recorder.activity)}", 70).ljust(70))
+            print("--+--------------------------------------------------------------------")
             # 13 lines available
             i = 0
             for msg in recorder.message_log:
