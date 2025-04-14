@@ -50,7 +50,8 @@ def main():
                                    conf.get_obs_password())
 
     recorder = Recorder(obs_controller, wow_controller,
-                        RecorderConfiguration(output_path, death_delay_seconds, linger_time, reset_time))
+                        RecorderConfiguration(output_path, death_delay_seconds,
+                                              linger_time, reset_time))
 
     try:
         hide_cursor()
