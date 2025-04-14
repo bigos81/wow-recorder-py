@@ -22,7 +22,7 @@ class RecorderConfiguration:
         return self.config['OBS']['host']
 
     def get_obs_port(self):
-        return self.config['OBS']['port']
+        return int(self.config['OBS']['port'])
 
     def get_obs_password(self):
         value = self.config['OBS']['password']
@@ -37,10 +37,10 @@ class RecorderConfiguration:
         return self.config['RECORDER']['output_path']
 
     def get_recorder_death_delay(self):
-        return self.config['RECORDER']['death_delay']
+        return int(self.config['RECORDER']['death_delay'])
 
     def get_recorder_linger_time(self):
-        return self.config['RECORDER']['linger_time']
+        return int(self.config['RECORDER']['linger_time'])
 
     def get_recorder_reset_time(self):
-        return self.config['RECORDER']['reset_time']
+        return int(self.config['RECORDER']['reset_time'])

@@ -134,10 +134,6 @@ class Recorder:
         self.activity = None
 
     def handle_recording(self, recording_path):
-        if (datetime.datetime.now() - self.activity.start_time).total_seconds() < self.boss_reset_time_seconds:
-            #boss reset
-            os.remove(recording_path)
-            return
         if not os.path.exists(self.recording_target_folder):
             os.makedirs(self.recording_target_folder)
 

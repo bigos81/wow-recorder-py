@@ -72,9 +72,6 @@ def main():
                 i = i + 1
             print('\033[25A\033[2K', end='')
 
-    except Exception as e:
-        print(f"Unexpected program error: {str(e)}. Press any key to exit...")
-        input()
     finally:
         show_cursor()
 
