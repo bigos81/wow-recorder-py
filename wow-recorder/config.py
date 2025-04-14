@@ -1,7 +1,7 @@
 """Configuration file module"""
 import configparser
 
-class RecorderConfiguration:
+class RecorderConfigurationFile:
     """Class representing configuration access object"""
 
     def __init__(self, conf_file_path = 'wow_recorder_py.cfg'):
@@ -9,7 +9,7 @@ class RecorderConfiguration:
         self.config.read(conf_file_path)
 
     def validate_config(self):
-        """Validates wwhether all values can be read from configuration file"""
+        """Validates whether all values can be read from configuration file"""
         self.get_recorder_reset_time()
         self.get_recorder_linger_time()
         self.get_recorder_death_delay()

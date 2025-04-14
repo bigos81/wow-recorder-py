@@ -7,8 +7,8 @@ import logging
 
 from obs.obs_control import OBSController
 from ui.terminal_tricks import hide_cursor, show_cursor, ASCIISpinner
-from wow_recorder import Recorder
-from config import RecorderConfiguration
+from wow_recorder import Recorder, RecorderConfiguration
+from config import RecorderConfigurationFile
 from wow.wow_control import WoWController
 
 
@@ -31,7 +31,7 @@ def main():
 
     # configuration
     try:
-        conf = RecorderConfiguration(cfg_file)
+        conf = RecorderConfigurationFile(cfg_file)
         conf.validate_config()
     except Exception as e:
         print(f"Configuration issue: {str(e)}. Press any key to exit...")
@@ -43,13 +43,14 @@ def main():
     linger_time = conf.get_recorder_linger_time()
     reset_time = conf.get_recorder_reset_time()
 
+
     wow_controller = WoWController(conf.get_wow_log_folder())
     obs_controller = OBSController(conf.get_obs_host(),
                                    conf.get_obs_port(),
                                    conf.get_obs_password())
 
-    recorder = Recorder(obs_controller, wow_controller, output_path,
-                        death_delay_seconds, linger_time, reset_time)
+    recorder = Recorder(obs_controller, wow_controller,
+                        RecorderConfiguration(output_path, death_delay_seconds, linger_time, reset_time))
 
     try:
         hide_cursor()
