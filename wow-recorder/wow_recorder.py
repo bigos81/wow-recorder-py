@@ -1,3 +1,4 @@
+"""Class controlling OBS Studio via web socket"""
 import datetime
 import os.path
 import shutil
@@ -10,25 +11,14 @@ from wow.wow_control import WoWController
 from wow.wow_log_parser import parse_wow_log_line
 
 
-# ENCOUNTER_START,2847,"Captain Dailcry",8,5,2649    encID, encName, DiffID, players
-# ENCOUNTER_END,2847,"Captain Dailcry",8,5,1,131971  encID, cndName, diffID, players, success?
-
-# 3/27/2025 20:18:45.3771  ENCOUNTER_START,2922,"Queen Ansurek",16,20,2657
-# 3/27/2025 20:19:49.9681  ENCOUNTER_END,2922,"Queen Ansurek",16,20,0,64568
-
-# 3/27/2025 20:19:21.7261  UNIT_DIED,0000000000000000,nil,0x80000000,0x80000000,Player-3713-0A9BCB2E,"Mogniania-BurningLegion-EU",0x40514,0x0,0
-# 3/27/2025 20:19:17.0561  UNIT_DIED,0000000000000000,nil,0x80000000,0x80000000,Creature-0-3894-2657-19648-163366-000065A4AE,"Magus of the Dead",0x2112,0x0,0
-
-# 3/27/2025 23:12:56.2881  CHALLENGE_MODE_END,2649,0,0,0,0.000000,0.000000
-# 3/27/2025 23:12:56.4561  CHALLENGE_MODE_START,"Priory of the Sacred Flame",2649,499,10,[160,10,9]
-# 3/27/2025 23:39:27.4231  CHALLENGE_MODE_END,2649,1,10,1602330,326.685974,2683.563965
-
 class ActivityType(Enum):
+    """Type of activity"""
     M_PLUS = 1
     RAID = 2
 
 
 class Activity:
+    """Represents activity that the recorder is recording"""
     def __init__(self, activity_type: ActivityType, name, player_count, key_level=0):
         self.key_level = key_level
         self.player_count = player_count
@@ -39,9 +29,11 @@ class Activity:
         self.success = False
 
     def __str__(self):
+        """ToString"""
         return f"{str(self.activity_type)}, {self.name} ({len(self.events)})"
 
     def add_event(self, timestamp: datetime.datetime, event: str):
+        """Adds event to activity"""
         delta = timestamp - self.start_time
         total_minute, second = divmod(delta.seconds, 60)
         hour, minute = divmod(total_minute, 60)
@@ -51,6 +43,7 @@ class Activity:
 
 
 def make_file_name(activity):
+    """Creates file name appropriate for given activity"""
     result = 'none'
     activity_type = 'none'
 
@@ -66,30 +59,50 @@ def make_file_name(activity):
             result = 'wipe'
 
 
-    return f"{activity.start_time.strftime(f'%Y-%m-%d__%H-%M-%S')}__{activity_type}__{activity.name}__{result}.mkv".replace(' ', '_')
+    return (f"{activity.start_time.strftime('%Y-%m-%d__%H-%M-%S')}__{activity_type}"
+            f"__{activity.name}__{result}.mkv").replace(' ', '_')
 
 
 def get_file_extension(dest_file_name):
+    """Gets file extension from path"""
     chunks = dest_file_name.split('.')
     if len(chunks) > 1:
         return chunks[-1]
     return ''
 
-class Recorder:
-    def __init__(self, obs_controller: OBSController, wow_controller: WoWController, recording_target_folder: str, death_delay_seconds = 3, linger_time_seconds = 5, boss_reset = 30):
-        
-        self.boss_reset_time_seconds = boss_reset
-        self.message_log = []
-        self.message_log_len = 10
+class RecorderConfiguration:
+    """Configuration class containing various recorder settings"""
+    def __init__(self, recording_target_folder: str, death_delay_seconds = 3,
+                 linger_time_seconds = 5, boss_reset = 30):
+        self.boss_reset = boss_reset
         self.linger_time_seconds = linger_time_seconds
         self.death_delay_seconds = death_delay_seconds
         self.recording_target_folder = recording_target_folder
+
+    def is_valid(self):
+        """Validates configuration to be usable or not"""
+        return True
+
+    def __str__(self):
+        return (f"reset: {self.boss_reset}; linger: {self.linger_time_seconds}; "
+                f"delay: {self.death_delay_seconds}; target: {self.recording_target_folder}")
+
+
+class Recorder:
+    """Main WoW Recorder class processing the data from wow controller and steering
+    obs with obs controller classes"""
+    def __init__(self, obs_controller: OBSController, wow_controller: WoWController,
+                 configuration: RecorderConfiguration):
+        self.configuration = configuration
+        self.message_log = []
+        self.message_log_len = 10
         self.wow_controller = wow_controller
         self.obs_controller = obs_controller
 
         self.activity = None
 
     def process(self):
+        """Performs single pass of processing, should be run in infinite loop"""
         if not self.obs_controller.connected:
             if not self.obs_controller.connect():
                 self.add_message("Cannot connect to OBS, waiting 3 seconds to retry...")
@@ -110,34 +123,39 @@ class Recorder:
 
 
     def start_activity(self, activity: Activity):
+        """Starts Activity"""
         if self.is_recording():
             self.add_message("Activity already in progress, cannot start new one")
             return
 
         self.activity = activity
         self.obs_controller.start_recording()
-        self.add_message("Recording started {0}".format(self.activity))
+        self.add_message(f"Recording started {self.activity}")
 
     def end_activity(self, success):
+        """Ends activity with given success result"""
         if not self.is_recording():
             self.add_message("Cannot end non-active Activity")
             return
         self.activity.success = success
 
-        if self.linger_time_seconds > 0:
-            self.add_message(f"Lingering recording time by {self.linger_time_seconds} seconds...")
-            time.sleep(self.linger_time_seconds)
+        if self.configuration.linger_time_seconds > 0:
+            self.add_message(f"Lingering recording time by "
+                             f"{self.configuration.linger_time_seconds} seconds...")
+            time.sleep(self.configuration.linger_time_seconds)
 
         recording_path = self.obs_controller.end_recording()
-        self.add_message("Recording finished: {0}".format(recording_path))
+        self.add_message(f"Recording finished: {recording_path}")
         self.handle_recording(recording_path)
         self.activity = None
 
     def handle_recording(self, recording_path):
-        if not os.path.exists(self.recording_target_folder):
-            os.makedirs(self.recording_target_folder)
+        """Handles recording file after Activity is finished"""
+        if not os.path.exists(self.configuration.recording_target_folder):
+            os.makedirs(self.configuration.recording_target_folder)
 
-        dated_dest_folder = os.path.join(self.recording_target_folder, datetime.datetime.now().strftime('%Y-%m-%d'))
+        dated_dest_folder = os.path.join(self.configuration.recording_target_folder,
+                                         datetime.datetime.now().strftime('%Y-%m-%d'))
         if not os.path.exists(dated_dest_folder):
             os.makedirs(dated_dest_folder)
 
@@ -147,16 +165,17 @@ class Recorder:
 
         file_extension = get_file_extension(dest_file_name)
         dest_event_file_path = dest_file_path.replace(file_extension, '.evt')
-        f = open(dest_event_file_path, "w+")
-        for e in self.activity.events:
-            f.write(f"{e['time']}\t{e['event']}\n")
-        f.close()
+        with open(dest_event_file_path, "w+", encoding='UTF-8') as f:
+            for e in self.activity.events:
+                f.write(f"{e['time']}\t{e['event']}\n")
 
 
     def is_recording(self):
+        """Indicates whether a recording is being performed"""
         return self.activity is not None
 
     def handle_wow_line(self, result):
+        """Handles WOW log line, preformatted via wow parser"""
         timestamp = result["timestamp"]
         match result["type"]:
             case 'CHALLENGE_MODE_START':
@@ -173,7 +192,7 @@ class Recorder:
                     self.start_activity(Activity(ActivityType.RAID, encounter_name, 20))
                 if difficulty_id == 8: #mythinc dungeon
                     if self.is_recording():
-                        self.activity.add_event(timestamp, "Boss start: {0}".format(encounter_name))
+                        self.activity.add_event(timestamp, f"Boss start: {encounter_name}")
             case 'ENCOUNTER_END':
                 encounter_name = result["rest"][2].replace('"','')
                 difficulty_id = int(result["rest"][3])
@@ -183,9 +202,11 @@ class Recorder:
                 if difficulty_id == 8: #mythinc dungeon
                     if self.is_recording():
                         if success:
-                            self.activity.add_event(timestamp, "Boss kill: {0}".format(encounter_name))
+                            self.activity.add_event(timestamp,
+                                                    f"Boss kill: {encounter_name}")
                         else:
-                            self.activity.add_event(timestamp, "Boss wipe: {0}".format(encounter_name))
+                            self.activity.add_event(timestamp,
+                                                    f"Boss wipe: {encounter_name}")
             case 'ZONE_CHANGE':
                 if self.is_recording():
                     if self.activity.activity_type == ActivityType.M_PLUS:
@@ -195,10 +216,15 @@ class Recorder:
                 if self.is_recording():
                     if str(result["rest"][5]).startswith("Player-"):
                         dead_player = result["rest"][6].replace('"','')
-                        self.activity.add_event(timestamp - datetime.timedelta(seconds=self.death_delay_seconds), "Death: {0}".format(dead_player))
+                        self.activity.add_event(timestamp -
+                                                datetime.timedelta(
+                                                    seconds=self.configuration.death_delay_seconds),
+                                                f"Death: {dead_player}")
 
     def add_message(self, message):
+        """Adds message to the message log, if message log is full, removes
+        oldest message and adds a new one at the end"""
         if len(self.message_log) == self.message_log_len:
             self.message_log.pop(0)
-        self.message_log.append({"time": datetime.datetime.now().strftime('%H:%M:%S'), "msg": message})
-
+        self.message_log.append({"time": datetime.datetime.now().strftime('%H:%M:%S'),
+                                 "msg": message})
