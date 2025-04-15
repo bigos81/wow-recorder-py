@@ -69,7 +69,7 @@ jobs:
           pip install -r requirements.txt
 
       - name: Build with pyinstaller
-        run: pyinstaller --onefile --console --name=src-${{ matrix.os }} main.py
+        run: pyinstaller --onefile --console --name=wow-recorder-${{ matrix.os }} main.py
 
       - name: Include configuration file
         run: cp wow_recorder_py-${{ matrix.os }}.cfg dist/wow_recorder_py.cfg
@@ -88,5 +88,5 @@ jobs:
         with:
           name: src-${{ matrix.os }}
           path: | 
-            wow-recorder-py/wow-recorder-py/src/dist/wow-recorder-${{ matrix.os }}*
+            dist/*
           if-no-files-found: error
