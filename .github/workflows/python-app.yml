@@ -72,18 +72,18 @@ jobs:
         run: pyinstaller --onefile --console --name=src-${{ matrix.os }} main.py
 
       - name: Include configuration file
-        run: cp wow_recorder_py-${{ matrix.os }}.cfg dist/wow_recorder_py.cfg
+        run: cp wow_recorder_py-${{ matrix.os }}.cfg src/dist/wow_recorder_py.cfg
 
       - name: Include .desktop script for Linux
         if: matrix.os == 'ubuntu-latest'
-        run: cp wow-recorder.desktop dist/wow-recorder.desktop
+        run: cp wow-recorder.desktop src/dist/wow-recorder.desktop
 
       - name: Deploy artifacts
         uses: actions/upload-artifact@v4
         with:
           name: src-${{ matrix.os }}
           path: | 
-            src/dist/wow-recorder-${{ matrix.os }}*
-            src/dist/wow-recorder.desktop
-            src/dist/wow_recorder_py.cfg
+            wow-recorder-py/src/dist/wow-recorder-${{ matrix.os }}*
+            wow-recorder-py/src/dist/wow-recorder.desktop
+            wow-recorder-py/src/dist/wow_recorder_py.cfg
           if-no-files-found: error
