@@ -199,5 +199,5 @@ def main():
         show_cursor()
 
 if __name__ == "__main__":
-    # main_gui()
-    main()
+    main_gui()
+    # main()
