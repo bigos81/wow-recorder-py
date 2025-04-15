@@ -25,6 +25,7 @@ jobs:
         run: |
           pip install pylint
           pip install mypy
+          pip install types-python-dateutil
 
       - name: Run Linter pyLint
         run: pylint --fail-under=8 $(git ls-files '*.py')
