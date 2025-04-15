@@ -21,8 +21,10 @@ jobs:
         with:
           python-version: 3.13
 
-      - name: Install Linter
-        run: pip install pylint
+      - name: Install Linters
+        run: |
+          pip install pylint
+          pip install mypy
 
       - name: Run Linter pyLint
         run: pylint --fail-under=8 $(git ls-files '*.py')
