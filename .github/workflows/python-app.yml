@@ -78,6 +78,11 @@ jobs:
         if: matrix.os == 'ubuntu-latest'
         run: cp wow-recorder.desktop dist/wow-recorder.desktop
 
+      - name: Debug
+        run: |
+          pwd
+          tree
+
       - name: Deploy artifacts
         uses: actions/upload-artifact@v4
         with:
