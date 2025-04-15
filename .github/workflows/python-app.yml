@@ -70,7 +70,7 @@ jobs:
 
       - name: Include .desktop script for Linux
         if: matrix.os == 'ubuntu-latest'
-        run: cp src/wow-recorder.desktop dist/wow-recorder.desktop
+        run: cp wow-recorder.desktop dist/wow-recorder.desktop
 
       - name: Deploy artifacts
         uses: actions/upload-artifact@v4
