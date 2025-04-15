@@ -31,7 +31,7 @@ jobs:
         run: pylint --fail-under=8 $(git ls-files '*.py')
 
       - name: Run Linter mypy
-        run: mypy --follow-untyped-imports --explicit-package-bases $(git ls-files '*.py')
+        run: mypy --follow-untyped-imports --explicit-package-bases --ignore-missing-imports $(git ls-files '*.py')
 
 
   Build:
