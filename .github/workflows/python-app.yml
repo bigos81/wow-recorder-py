@@ -72,7 +72,7 @@ jobs:
         run: pyinstaller --onefile --console --name=src-${{ matrix.os }} main.py
 
       - name: Include configuration file
-        run: cp wow_recorder_py-${{ matrix.os }}.cfg src/dist/wow_recorder_py.cfg
+        run: cp wow_recorder_py-${{ matrix.os }}.cfg wow-recorder-py/src/dist/wow_recorder_py.cfg
 
       - name: Include .desktop script for Linux
         if: matrix.os == 'ubuntu-latest'
