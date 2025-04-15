@@ -5,7 +5,7 @@ on: [push]
 defaults:
   run:
     shell: bash
-    working-directory: wow-recorder
+    working-directory: src
 
 jobs:
   Lint:
@@ -63,19 +63,19 @@ jobs:
           pip install -r requirements.txt
 
       - name: Build with pyinstaller
-        run: pyinstaller --onefile --console --name=wow-recorder-${{ matrix.os }} main.py
+        run: pyinstaller --onefile --console --name=src-${{ matrix.os }} main.py
 
       - name: Include configuration file
         run: cp wow_recorder_py-${{ matrix.os }}.cfg dist/wow_recorder_py.cfg
 
       - name: Include .desktop script for Linux
         if: matrix.os == 'ubuntu-latest'
-        run: cp wow-recorder.desktop dist/wow-recorder.desktop
+        run: cp src.desktop dist/src.desktop
 
       - name: Deploy artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: wow-recorder-${{ matrix.os }}
+          name: src-${{ matrix.os }}
           path: | 
             wow-recorder/dist/wow-recorder-${{ matrix.os }}*
             wow-recorder/dist/wow-recorder.desktop
