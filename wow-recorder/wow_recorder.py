@@ -6,6 +6,8 @@ import time
 from enum import Enum
 from time import sleep
 
+from typing import Optional
+
 from obs.obs_control import OBSController
 from wow.wow_control import WoWController
 from wow.wow_log_parser import parse_wow_log_line
@@ -25,7 +27,7 @@ class Activity:
         self.name = name
         self.activity_type = activity_type
         self.start_time = datetime.datetime.now()
-        self.events = []
+        self.events = list[dict[str, str]]()
         self.success = False
 
     def __str__(self):
@@ -38,8 +40,8 @@ class Activity:
         total_minute, second = divmod(delta.seconds, 60)
         hour, minute = divmod(total_minute, 60)
         relative_time = f"{hour:02}:{minute:02}:{second:02}"
-        event = {"time": relative_time, "event": event}
-        self.events.append(event)
+        event_to_add = {"time": relative_time, "event": event}
+        self.events.append(event_to_add)
 
 
 def make_file_name(activity):
@@ -94,7 +96,7 @@ class Recorder:
     def __init__(self, obs_controller: OBSController, wow_controller: WoWController,
                  configuration: RecorderConfiguration):
         self.configuration = configuration
-        self.message_log = []
+        self.message_log = list[str]()
         self.message_log_len = 10
         self.wow_controller = wow_controller
         self.obs_controller = obs_controller
@@ -128,7 +130,7 @@ class Recorder:
             self.add_message("Activity already in progress, cannot start new one")
             return
 
-        self.activity = activity
+        self.activity = activity # type: ignore
         self.obs_controller.start_recording()
         self.add_message(f"Recording started {self.activity}")
 
