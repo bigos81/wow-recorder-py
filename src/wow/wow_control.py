@@ -48,7 +48,7 @@ class WoWController:
         if len(line) > 0:
             self.last_log_time = datetime.datetime.now()
 
-        datedelta =  datetime.datetime.now() - self.last_log_time
+        datedelta = datetime.datetime.now() - self.last_log_time
         if datedelta.seconds > self.new_log_file_timeout_seconds:
             new_log_file = self.get_current_log_path()
             if self.log_file_path != new_log_file:
