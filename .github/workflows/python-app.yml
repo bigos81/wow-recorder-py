@@ -76,14 +76,14 @@ jobs:
 
       - name: Include .desktop script for Linux
         if: matrix.os == 'ubuntu-latest'
-        run: cp wow-recorder.desktop src/dist/wow-recorder.desktop
+        run: cp wow-recorder.desktop dist/wow-recorder.desktop
 
       - name: Deploy artifacts
         uses: actions/upload-artifact@v4
         with:
           name: src-${{ matrix.os }}
           path: | 
-            wow-recorder-py/src/dist/wow-recorder-${{ matrix.os }}*
-            wow-recorder-py/src/dist/wow-recorder.desktop
-            wow-recorder-py/src/dist/wow_recorder_py.cfg
+            dist/wow-recorder-${{ matrix.os }}*
+            dist/wow-recorder.desktop
+            dist/wow_recorder_py.cfg
           if-no-files-found: error
