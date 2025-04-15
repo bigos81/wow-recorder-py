@@ -22,7 +22,7 @@ class OBSController:
             return False
 
 
-    def disconnect(self) -> None:
+    def disconnect(self):
         """Disconnects from OSB"""
         if self.connected:
             self.obs_client.disconnect()
