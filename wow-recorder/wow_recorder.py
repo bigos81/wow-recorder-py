@@ -6,8 +6,6 @@ import time
 from enum import Enum
 from time import sleep
 
-from typing import Optional
-
 from obs.obs_control import OBSController
 from wow.wow_control import WoWController
 from wow.wow_log_parser import parse_wow_log_line
@@ -96,12 +94,17 @@ class Recorder:
     def __init__(self, obs_controller: OBSController, wow_controller: WoWController,
                  configuration: RecorderConfiguration):
         self.configuration = configuration
-        self.message_log = list[str]()
+        self.message_log = list[dict[str, str]]()
         self.message_log_len = 10
         self.wow_controller = wow_controller
         self.obs_controller = obs_controller
 
         self.activity = None
+
+    def get_activity(self) -> Activity:
+        if self.activity is not None:
+            return self.activity
+        raise ValueError("Activity not set")
 
     def process(self):
         """Performs single pass of processing, should be run in infinite loop"""
@@ -182,7 +185,7 @@ class Recorder:
         """Indicates whether a recording is being performed"""
         return self.activity is not None
 
-    def handle_wow_line(self, result):
+    def handle_wow_line(self, result) -> None:
         """Handles WOW log line, preformatted via wow parser"""
         timestamp = result["timestamp"]
         match result["type"]:
@@ -200,7 +203,7 @@ class Recorder:
                     self.start_activity(Activity(ActivityType.RAID, encounter_name, 20))
                 if difficulty_id == 8: #mythinc dungeon
                     if self.is_recording():
-                        self.activity.add_event(timestamp, f"Boss start: {encounter_name}")
+                        self.get_activity().add_event(timestamp, f"Boss start: {encounter_name}")
             case 'ENCOUNTER_END':
                 encounter_name = result["rest"][2].replace('"','')
                 difficulty_id = int(result["rest"][3])
@@ -210,26 +213,26 @@ class Recorder:
                 if difficulty_id == 8: #mythinc dungeon
                     if self.is_recording():
                         if success:
-                            self.activity.add_event(timestamp,
+                            self.get_activity().add_event(timestamp,
                                                     f"Boss kill: {encounter_name}")
                         else:
-                            self.activity.add_event(timestamp,
+                            self.get_activity().add_event(timestamp,
                                                     f"Boss wipe: {encounter_name}")
             case 'ZONE_CHANGE':
                 if self.is_recording():
-                    if self.activity.activity_type == ActivityType.M_PLUS:
+                    if self.get_activity().activity_type == ActivityType.M_PLUS:
                         # abandoned key
                         self.end_activity(False)
             case 'UNIT_DIED':
                 if self.is_recording():
                     if str(result["rest"][5]).startswith("Player-"):
                         dead_player = result["rest"][6].replace('"','')
-                        self.activity.add_event(timestamp -
+                        self.get_activity().add_event(timestamp -
                                                 datetime.timedelta(
                                                     seconds=self.configuration.death_delay_seconds),
                                                 f"Death: {dead_player}")
 
-    def add_message(self, message):
+    def add_message(self, message: str) -> None:
         """Adds message to the message log, if message log is full, removes
         oldest message and adds a new one at the end"""
         if len(self.message_log) == self.message_log_len:

@@ -5,14 +5,14 @@ import obsws_python as obs
 class OBSController:
     """Object for controlling OBS Studio via web socket"""
 
-    def __init__(self, host, port, password):
+    def __init__(self, host: str, port: int, password: str):
         self.connected = False
         self.obs_client = None
         self.host = host
         self.port = port
         self.password = password
 
-    def connect(self):
+    def connect(self) -> bool:
         """Connects to OBS"""
         try:
             self.obs_client = obs.ReqClient(host=self.host, port=self.port, password=self.password)
@@ -22,7 +22,7 @@ class OBSController:
             return False
 
 
-    def disconnect(self):
+    def disconnect(self) -> None:
         """Disconnects from OSB"""
         if self.connected:
             self.obs_client.disconnect()
