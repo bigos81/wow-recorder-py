@@ -5,7 +5,6 @@ import tkinter as tk
 
 import datetime
 import logging
-from tkinter import PhotoImage
 
 from obs.obs_control import OBSController
 from ui.terminal_tricks import hide_cursor, show_cursor, ASCIISpinner
