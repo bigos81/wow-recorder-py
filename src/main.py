@@ -82,10 +82,10 @@ def main_gui():
     activity_label = tk.Label(activity_label_frame, justify='center')
     activity_label.pack(fill='x')
 
-    log_label_frame = tk.LabelFrame(window, text="LOG")
+    log_label_frame = tk.LabelFrame(window, text="LOG", height=10)
     log_label_frame.grid(row=2, column=0, columnspan=2, sticky='wen')
 
-    log_label = tk.Label(log_label_frame, text='log?', anchor='w', justify='left')
+    log_label = tk.Label(log_label_frame, anchor='nw', justify='left', height=10)
     log_label.pack(fill='x')
 
     while True:
