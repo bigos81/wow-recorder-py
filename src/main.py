@@ -1,7 +1,9 @@
 """Main entry point of application"""
 #!/usr/bin/python
 import sys
+
 import tkinter as tk
+import tkinter.messagebox as mbox
 
 import datetime
 import logging
@@ -34,8 +36,8 @@ def main_gui():
         conf = RecorderConfigurationFile(cfg_file)
         conf.validate_config()
     except Exception as e:
-        print(f"Configuration issue: {str(e)}. Press any key to exit...")
-        input()
+        mbox.showerror(title="Configuration error!", message=str(e))
+
         sys.exit(1)
 
     output_path = conf.get_recorder_output_path()

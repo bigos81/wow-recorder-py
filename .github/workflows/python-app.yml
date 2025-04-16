@@ -85,4 +85,5 @@ jobs:
           path: | 
             src/dist/wow-recorder-${{ matrix.os }}
             src/dist/wow-recorder*
+            src/dist/wow_recorder_py.cfg
           if-no-files-found: error
