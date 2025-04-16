@@ -22,6 +22,7 @@ def str_ellipsis(msg: str, cnt: int):
         final = msg[0:cnt-4] + '...'
     return final
 
+
 def main_gui():
     """Main app function"""
     logging.getLogger('obsws_python.baseclient.ObsClient').disabled = True
@@ -37,7 +38,6 @@ def main_gui():
         conf.validate_config()
     except Exception as e:
         mbox.showerror(title="Configuration error!", message=str(e))
-
         sys.exit(1)
 
     output_path = conf.get_recorder_output_path()
@@ -102,7 +102,7 @@ def main_gui():
 
         all_str = ''
         for msg in recorder.message_log:
-            all_str = all_str + f"{msg['time']}: {msg['msg']}\n"
+            all_str = all_str + str_ellipsis(f"{msg['time']}: {msg['msg']}\n", 100)
         log_label.configure(text=all_str[:-1])
 
 

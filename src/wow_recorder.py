@@ -110,8 +110,8 @@ class Recorder:
         """Performs single pass of processing, should be run in infinite loop"""
         if not self.obs_controller.connected:
             if not self.obs_controller.connect():
-                self.add_message("Cannot connect to OBS, waiting 3 seconds to retry...")
-                sleep(3)
+                self.add_message("Cannot connect to OBS, waiting 1 second to retry...")
+                sleep(1)
             else:
                 self.add_message("Connection to OBS successful")
 
