@@ -25,7 +25,6 @@ The application is
     Release archive should contain:
     - `wow-recorder-XXX-latest` binary, where XXX stands for platform the binary is created for
     - `wow_recorder_py.cfg` configuration file
-    - `wow-recorder.desktop` linux only .desktop file to ensure running in terminal
 2. Set up OBS web socket integration
 
    Enable WebSocket Server Settings here:
