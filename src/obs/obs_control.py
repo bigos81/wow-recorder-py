@@ -1,9 +1,11 @@
 """OBS Controller using web socket"""
 import obsws_python as obs
+from obsws_python import ReqClient
 
 
 class OBSController:
     """Object for controlling OBS Studio via web socket"""
+
 
     def __init__(self, host: str, port: int, password: str):
         self.connected = False
@@ -12,10 +14,14 @@ class OBSController:
         self.port = port
         self.password = password
 
+
+    def set_client(self, client: ReqClient) -> None:
+        self.obs_client = client
+
     def connect(self) -> bool:
         """Connects to OBS"""
         try:
-            self.obs_client = obs.ReqClient(host=self.host, port=self.port, password=self.password)
+            self.set_client(obs.ReqClient(host=self.host, port=self.port, password=self.password))
             self.connected = True
             return True
         except ConnectionRefusedError:
