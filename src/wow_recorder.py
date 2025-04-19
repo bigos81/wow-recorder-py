@@ -111,7 +111,7 @@ class Recorder:
         """Starts infinite execution of recorder - designed for thread execution"""
         while True:
             if self.kill_switch:
-                return 
+                return
             self.process()
 
     def kill(self):
