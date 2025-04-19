@@ -9,7 +9,6 @@ class WoWController:
     def __init__(self, log_folder):
         self.log_folder = log_folder
 
-        self.WOW_PROCESS_NAME = "WoW.exe"
         self.log_file_handle = None
         self.log_file_path = None
         self.last_log_time = datetime.datetime.now()
@@ -21,7 +20,9 @@ class WoWController:
         current_log = None
         for file in os.listdir(self.log_folder):
             file_path = os.path.join(self.log_folder, file)
-            if isfile(file_path) and str(file).startswith("WoWCombatLog-") and str(file).endswith(".txt"):
+            if (isfile(file_path) and
+                    str(file).startswith("WoWCombatLog-")
+                    and str(file).endswith(".txt")):
                 file_date = os.path.getmtime(file_path)
                 if file_date > last_date:
                     last_date = file_date

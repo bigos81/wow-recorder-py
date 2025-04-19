@@ -53,10 +53,13 @@ class RecorderMainWindow:
 
     def update_data(self) -> None:
         # fill in data
-        self.wow_log_file_label.configure(text=f"WOW Log: {self.recorder.wow_controller.log_file_name}")
-        self.wow_log_time_label.configure(text=f"Time: {self.recorder.wow_controller.last_log_time.strftime('%H:%M:%S')}")
+        self.wow_log_file_label.configure(text=f"WOW Log: "
+                                               f"{self.recorder.wow_controller.log_file_name}")
+        log_time = self.recorder.wow_controller.last_log_time.strftime('%H:%M:%S')
+        self.wow_log_time_label.configure(text=f"Time: {log_time}")
 
-        self.obs_connected_label.configure(text=f"OBS Connection: {self.recorder.obs_controller.connected}")
+        self.obs_connected_label.configure(text=f"OBS Connection: "
+                                                f"{self.recorder.obs_controller.connected}")
         self.obs_recording_label.configure(text=f"Recording: {self.recorder.is_recording()}")
 
         self.activity_label.configure(text=f"{str(self.recorder.activity)}")
