@@ -127,29 +127,25 @@ def main_gui():
         mbox.showerror(title="Configuration error!", message=str(e))
         sys.exit(1)
 
-    output_path = conf.get_recorder_output_path()
-    death_delay_seconds = conf.get_recorder_death_delay()
-    linger_time = conf.get_recorder_linger_time()
-    reset_time = conf.get_recorder_reset_time()
-
     wow_controller = WoWController(conf.get_wow_log_folder())
     obs_controller = OBSController(conf.get_obs_host(),
                                    conf.get_obs_port(),
                                    conf.get_obs_password())
 
     recorder = Recorder(obs_controller, wow_controller,
-                        RecorderConfiguration(output_path, death_delay_seconds,
-                                              linger_time, reset_time))
+                        RecorderConfiguration(conf.get_recorder_output_path(),
+                                              conf.get_recorder_death_delay(),
+                                              conf.get_recorder_linger_time(),
+                                              conf.get_recorder_reset_time()))
 
+    t = threading.Thread(target=recorder.start)
     try:
-        t = threading.Thread(target=recorder.start)
         t.start()
         window = RecorderMainWindow(recorder)
         window.main_loop()
     finally:
         recorder.kill()
         t.join(timeout=2)
-
 
 
 def main():
