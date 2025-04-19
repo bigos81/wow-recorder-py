@@ -40,7 +40,7 @@ class WoWController:
             if log_path is not None:
                 # open file and rewind to end
                 self.last_log_time = datetime.datetime.now()
-                self.log_file_handle = open(log_path, "r")
+                self.log_file_handle = open(log_path, "r", encoding='UTF-8')
                 self.log_file_handle.seek(0, io.SEEK_END)
                 self.log_file_path = log_path
             else:

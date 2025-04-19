@@ -79,10 +79,6 @@ class RecorderConfiguration:
         self.death_delay_seconds = death_delay_seconds
         self.recording_target_folder = recording_target_folder
 
-    def is_valid(self):
-        """Validates configuration to be usable or not"""
-        return True
-
     def __str__(self):
         return (f"reset: {self.boss_reset}; linger: {self.linger_time_seconds}; "
                 f"delay: {self.death_delay_seconds}; target: {self.recording_target_folder}")
@@ -103,6 +99,7 @@ class Recorder:
         self.activity = None
 
     def get_activity(self) -> Activity:
+        """Gets current activity or throws ValueError when not set"""
         if self.activity is not None:
             return self.activity
         raise ValueError("Activity not set")
@@ -115,6 +112,7 @@ class Recorder:
             self.process()
 
     def kill(self):
+        """Signals the class not to perform the main loop anymore"""
         self.kill_switch = True
 
     def process(self):
