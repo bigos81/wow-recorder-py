@@ -1,6 +1,7 @@
 """Main entry point of application"""
 #!/usr/bin/python
 import sys
+import threading
 
 import tkinter as tk
 import tkinter.messagebox as mbox
@@ -14,13 +15,99 @@ from wow_recorder import Recorder, RecorderConfiguration
 from config import RecorderConfigurationFile
 from wow.wow_control import WoWController
 
-
 def str_ellipsis(msg: str, cnt: int):
     """Shortens the string and adds ... at the end"""
     final = msg
     if len(msg) > cnt:
         final = msg[0:cnt-4] + '...'
     return final
+
+class RecorderMainWindow:
+    def __init__(self, recorder: Recorder):
+        self.recorder = recorder
+
+        self.window = tk.Tk()
+        self.window.title("WOW Recorder PY")
+
+        self.window.resizable(False, False)
+
+        self.obs_label_frame = tk.LabelFrame(self.window, text='OBS', background='grey')
+        self.obs_label_frame.grid(row=0, column=0, sticky="wens")
+
+        self.obs_connected_label = tk.Label(self.obs_label_frame, anchor="nw")
+        self.obs_connected_label.pack(fill='x')
+
+        self.obs_recording_label = tk.Label(self.obs_label_frame, anchor="nw")
+        self.obs_recording_label.pack(fill='x')
+
+        self.wow_label_frame = tk.LabelFrame(self.window, text='WOW', background='grey')
+        self.wow_label_frame.grid(row=0, column=1, sticky="wens")
+
+        self.wow_log_file_label = tk.Label(self.wow_label_frame, anchor='nw')
+        self.wow_log_file_label.pack(fill='x')
+
+        self.wow_log_time_label = tk.Label(self.wow_label_frame, anchor='nw')
+        self.wow_log_time_label.pack(fill='x')
+
+        self.activity_label_frame = tk.LabelFrame(self.window, text="ACTIVITY")
+        self.activity_label_frame.grid(row=1, column=0, columnspan=2, sticky='wens')
+
+        self.activity_label = tk.Label(self.activity_label_frame, justify='center')
+        self.activity_label.pack(fill='x')
+
+        self.log_label_frame = tk.LabelFrame(self.window, text="LOG", height=10)
+        self.log_label_frame.grid(row=2, column=0, columnspan=2, sticky='wen')
+
+        self.log_label = tk.Label(self.log_label_frame, anchor='nw', justify='left', height=10)
+        self.log_label.pack(fill='x')
+
+        self.window.after(1, self.update_data)
+
+    def update_data(self) -> None:
+        # fill in data
+        self.wow_log_file_label.configure(text=f"WOW Log: {self.recorder.wow_controller.log_file_name}")
+        self.wow_log_time_label.configure(text=f"Time: {self.recorder.wow_controller.last_log_time.strftime('%H:%M:%S')}")
+
+        self.obs_connected_label.configure(text=f"OBS Connection: {self.recorder.obs_controller.connected}")
+        self.obs_recording_label.configure(text=f"Recording: {self.recorder.is_recording()}")
+
+        self.activity_label.configure(text=f"{str(self.recorder.activity)}")
+
+        all_str = ''
+        for msg in self.recorder.message_log:
+            all_str = all_str + str_ellipsis(f"{msg['time']}: {msg['msg']}\n", 100)
+        self.log_label.configure(text=all_str[:-1])
+
+        # style the containers
+        if self.recorder.obs_controller.connected:
+            self.obs_label_frame.configure(background='lime green')
+            self.obs_connected_label.configure(background='lime green')
+            self.obs_recording_label.configure(background='lime green')
+        else:
+            self.obs_label_frame.configure(background='red')
+            self.obs_connected_label.configure(background='red')
+            self.obs_recording_label.configure(background='red')
+
+        if self.recorder.wow_controller.log_file_name is None:
+            self.wow_label_frame.configure(background='red')
+            self.wow_log_file_label.configure(background='red')
+            self.wow_log_time_label.configure(background='red')
+        else:
+            self.wow_label_frame.configure(background='lime green')
+            self.wow_log_file_label.configure(background='lime green')
+            self.wow_log_time_label.configure(background='lime green')
+
+        if self.recorder.activity is None:
+            self.activity_label_frame.configure(background='gray')
+            self.activity_label.configure(background='gray')
+        else:
+            self.activity_label_frame.configure(background='lime green')
+            self.activity_label.configure(background='lime green')
+
+        self.window.after(250, self.update_data)
+
+    def main_loop(self):
+        self.window.mainloop()
 
 
 def main_gui():
@@ -53,87 +140,17 @@ def main_gui():
     recorder = Recorder(obs_controller, wow_controller,
                         RecorderConfiguration(output_path, death_delay_seconds,
                                               linger_time, reset_time))
-    window = tk.Tk()
-    window.title("WOW Recorder PY")
 
-    window.resizable(False, False)
-
-    obs_label_frame = tk.LabelFrame(window, text='OBS', background='grey')
-    obs_label_frame.grid(row=0, column=0, sticky="wens")
-
-    obs_connected_label = tk.Label(obs_label_frame, anchor="nw")
-    obs_connected_label.pack(fill='x')
-
-    obs_recording_label = tk.Label(obs_label_frame, anchor="nw")
-    obs_recording_label.pack(fill='x')
-
-    wow_label_frame = tk.LabelFrame(window, text='WOW', background='grey')
-    wow_label_frame.grid(row=0, column=1, sticky="wens")
-
-    wow_log_file_label = tk.Label(wow_label_frame, anchor='nw')
-    wow_log_file_label.pack(fill='x')
-
-    wow_log_time_label = tk.Label(wow_label_frame, anchor='nw')
-    wow_log_time_label.pack(fill='x')
-
-    activity_label_frame = tk.LabelFrame(window, text="ACTIVITY")
-    activity_label_frame.grid(row=1, column=0, columnspan=2, sticky='wens')
-
-    activity_label = tk.Label(activity_label_frame, justify='center')
-    activity_label.pack(fill='x')
-
-    log_label_frame = tk.LabelFrame(window, text="LOG", height=10)
-    log_label_frame.grid(row=2, column=0, columnspan=2, sticky='wen')
-
-    log_label = tk.Label(log_label_frame, anchor='nw', justify='left', height=10)
-    log_label.pack(fill='x')
-
-    while True:
-        recorder.process()
-
-        # fill in data
-        wow_log_file_label.configure(text=f"WOW Log: {recorder.wow_controller.log_file_name}")
-        wow_log_time_label.configure(text=f"Time: {recorder.wow_controller.last_log_time}")
-
-        obs_connected_label.configure(text=f"OBS Connection: {recorder.obs_controller.connected}")
-        obs_recording_label.configure(text=f"Recording: {recorder.is_recording()}")
-
-        activity_label.configure(text=f"{str(recorder.activity)}")
-
-        all_str = ''
-        for msg in recorder.message_log:
-            all_str = all_str + str_ellipsis(f"{msg['time']}: {msg['msg']}\n", 100)
-        log_label.configure(text=all_str[:-1])
+    try:
+        t = threading.Thread(target=recorder.start)
+        t.start()
+        window = RecorderMainWindow(recorder)
+        window.main_loop()
+    finally:
+        recorder.kill()
+        t.join(timeout=2)
 
 
-        # style the containers
-        if recorder.obs_controller.connected:
-            obs_label_frame.configure(background='lime green')
-            obs_connected_label.configure(background='lime green')
-            obs_recording_label.configure(background='lime green')
-        else:
-            obs_label_frame.configure(background='red')
-            obs_connected_label.configure(background='red')
-            obs_recording_label.configure(background='red')
-
-        if recorder.wow_controller.log_file_name is None:
-            wow_label_frame.configure(background='red')
-            wow_log_file_label.configure(background='red')
-            wow_log_time_label.configure(background='red')
-        else:
-            wow_label_frame.configure(background='lime green')
-            wow_log_file_label.configure(background='lime green')
-            wow_log_time_label.configure(background='lime green')
-
-        if recorder.activity is None:
-            activity_label_frame.configure(background='gray')
-            activity_label.configure(background='gray')
-        else:
-            activity_label_frame.configure(background='lime green')
-            activity_label.configure(background='lime green')
-
-        # update window
-        window.update()
 
 def main():
     """Main app function"""

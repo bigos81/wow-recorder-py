@@ -93,6 +93,7 @@ class Recorder:
     obs with obs controller classes"""
     def __init__(self, obs_controller: OBSController, wow_controller: WoWController,
                  configuration: RecorderConfiguration):
+        self.kill_switch = False
         self.configuration = configuration
         self.message_log = list[dict[str, str]]()
         self.message_log_len = 10
@@ -105,6 +106,16 @@ class Recorder:
         if self.activity is not None:
             return self.activity
         raise ValueError("Activity not set")
+
+    def start(self):
+        """Starts infinite execution of recorder - designed for thread execution"""
+        while True:
+            if self.kill_switch:
+                return 
+            self.process()
+
+    def kill(self):
+        self.kill_switch = True
 
     def process(self):
         """Performs single pass of processing, should be run in infinite loop"""
