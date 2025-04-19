@@ -1,11 +1,11 @@
+"""Module for controlling WOW logs"""
 import datetime
 import io
 import os
 from os.path import isfile
 
-
 class WoWController:
-
+    """Main class for WOW logging"""
     def __init__(self, log_folder):
         self.log_folder = log_folder
 
@@ -16,6 +16,7 @@ class WoWController:
         self.log_file_name = None
 
     def get_current_log_path(self):
+        """Gets current wow log path basing on the base folder path provided"""
         last_date = 0
         current_log = None
         for file in os.listdir(self.log_folder):
@@ -31,7 +32,8 @@ class WoWController:
 
         return current_log
 
-    def get_log_line(self):
+    def get_log_line(self) -> str:
+        """Gets most up-to-date log line from WOW"""
         if self.log_file_handle is None:
             # need new file to tail
             log_path = self.get_current_log_path()
@@ -57,5 +59,3 @@ class WoWController:
             else:
                 self.last_log_time = datetime.datetime.now()
         return line
-
-

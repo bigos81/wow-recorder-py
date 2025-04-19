@@ -51,6 +51,5 @@ def main_gui():
         t.join(timeout=2)
 
 
-
 if __name__ == "__main__":
     main_gui()

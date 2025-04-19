@@ -1,3 +1,4 @@
+"""Main window of the application"""
 import tkinter as tk
 
 from wow_recorder import Recorder
@@ -11,6 +12,7 @@ def str_ellipsis(msg: str, cnt: int):
 
 
 class RecorderMainWindow:
+    """Class for window GUI"""
     def __init__(self, recorder: Recorder):
         self.recorder = recorder
 
@@ -52,6 +54,7 @@ class RecorderMainWindow:
         self.window.after(1, self.update_data)
 
     def update_data(self) -> None:
+        """Updates window data based on the recorder state"""
         # fill in data
         self.wow_log_file_label.configure(text=f"WOW Log: "
                                                f"{self.recorder.wow_controller.log_file_name}")
@@ -98,4 +101,5 @@ class RecorderMainWindow:
         self.window.after(250, self.update_data)
 
     def main_loop(self):
+        """Starts main loop of the window - this is blocking"""
         self.window.mainloop()

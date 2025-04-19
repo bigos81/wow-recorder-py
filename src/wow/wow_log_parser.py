@@ -1,9 +1,11 @@
+"""Parser class for wow log contents"""
 import re
 from dateutil import parser
 from dateutil.parser import ParserError
 
 
 def parse_wow_log_line(line):
+    """Parses single WOW log line"""
     # remove comas from quoted strings
     for quoted in re.findall('"([^"]*)"', line):
         line = line.replace(quoted, quoted.replace(',',''))
