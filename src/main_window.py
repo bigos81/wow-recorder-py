@@ -12,6 +12,8 @@ def str_ellipsis(msg: str, cnt: int):
 
 
 class RecorderMainWindow:
+    # pylint: disable=too-many-instance-attributes
+    # standard approach to have those widgets as members
     """Class for window GUI"""
     def __init__(self, recorder: Recorder):
         self.recorder = recorder
