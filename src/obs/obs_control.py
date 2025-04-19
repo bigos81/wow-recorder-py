@@ -1,5 +1,4 @@
 """OBS Controller using web socket"""
-import obsws_python as obs
 from obsws_python import ReqClient
 
 
