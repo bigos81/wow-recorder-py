@@ -1,6 +1,6 @@
 import tkinter as tk
 
-from src.wow_recorder import Recorder
+from wow_recorder import Recorder
 
 def str_ellipsis(msg: str, cnt: int):
     """Shortens the string and adds ... at the end"""

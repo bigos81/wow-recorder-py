@@ -8,7 +8,7 @@ import tkinter.messagebox as mbox
 import logging
 
 from obs.obs_control import OBSController
-from src.ui.main_window import RecorderMainWindow
+from main_window import RecorderMainWindow
 from wow_recorder import RecorderConfiguration, Recorder
 from config import RecorderConfigurationFile
 from wow.wow_control import WoWController
