@@ -1,6 +1,7 @@
 """OBS Controller using web socket"""
 import obsws_python as obs
 from obsws_python import ReqClient
+from pydevd_attach_to_process.winappdbg.win32.advapi32 import REG_QWORD
 
 
 class OBSController:
@@ -15,13 +16,11 @@ class OBSController:
         self.password = password
 
 
-    def set_client(self, client: ReqClient) -> None:
-        self.obs_client = client
-
     def connect(self) -> bool:
         """Connects to OBS"""
         try:
-            self.set_client(obs.ReqClient(host=self.host, port=self.port, password=self.password))
+            # it's the only way to ignore the type assignment, as the contractor of ReqClient throws exception :(
+            self.obs_client = ReqClient(host=self.host, port=self.port, password=self.password)  # type: ignore
             self.connected = True
             return True
         except ConnectionRefusedError:
