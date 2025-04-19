@@ -83,6 +83,9 @@ class RecorderConfiguration:
         return (f"reset: {self.boss_reset}; linger: {self.linger_time_seconds}; "
                 f"delay: {self.death_delay_seconds}; target: {self.recording_target_folder}")
 
+    def __hash__(self):
+        return self.__str__().__hash__()
+
 
 class Recorder:
     """Main WoW Recorder class processing the data from wow controller and steering
