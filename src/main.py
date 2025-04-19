@@ -26,7 +26,7 @@ def main_gui():
     try:
         conf = RecorderConfigurationFile(cfg_file)
         conf.validate_config()
-    except Exception as e:
+    except Exception as e: # pylint: disable=broad-except
         mbox.showerror(title="Configuration error!", message=str(e))
         sys.exit(1)
 
