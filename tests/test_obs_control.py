@@ -5,7 +5,7 @@ from websocket import WebSocketException
 
 from src.obs.obs_control import OBSController
 
-host = 'host'
+host = '127.0.0.1'
 password = 'pass'
 port = 1234
 c = OBSController(host, port, password)
@@ -18,16 +18,13 @@ def test_obscontroller_construction():
     assert port == c.port
 
 
-def test_connect():
-    with pytest.raises(WebSocketException):
-        c.connect()
-
+def test_connect_fail():
+    assert c.connect() == False
 
 def test_get_record_status_error():
     c.connected = False
     with pytest.raises(RuntimeError):
         c.get_record_status()
-
 
 def test_get_record_status_pass():
     c.connected = True
@@ -35,7 +32,6 @@ def test_get_record_status_pass():
     c.obs_client = client_mock
     c.get_record_status()
     client_mock.get_record_status.assert_called()
-
 
 def test_start_recording_error():
     c.connected = False
