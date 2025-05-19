@@ -1,0 +1,2 @@
+[run]
+omit = src/main_window.py
