@@ -24,7 +24,6 @@ obs-websocket-py==1.0
 obsws-python==1.7.1
 packaging==23.0
 pexpect==4.8.0
-pipenv==2023.2.18
 pkginfo==1.9.6
 platformdirs
 psutil==7.0.0
@@ -47,4 +46,4 @@ virtualenv==20.30.0
 virtualenv-clone==0.5.7
 webencodings==0.5.1
 websocket-client==1.8.0
-zipp>=3.19.1
+zipp>=3.19.127:pipenv==2023.2.18
