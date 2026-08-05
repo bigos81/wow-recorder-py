@@ -82,7 +82,7 @@ jobs:
         run: cp wow-recorder.desktop dist/wow-recorder.desktop
 
       - name: Deploy artifacts
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: wow-recorder-${{ matrix.os }}
           path: | 
