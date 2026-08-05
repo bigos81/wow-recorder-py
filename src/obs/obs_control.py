@@ -20,10 +20,10 @@ class OBSController:
             # it's the only way to ignore the type assignment, as the contractor of ReqClient
             # throws exception :(
             self.obs_client = (
-                ReqClient(host=self.host, port=self.port, passwd=self.passwd)) # type: ignore
+                ReqClient(host=self.host, port=self.port, password=self.passwd)) # type: ignore
             self.connected = True
             return True
-        except ConnectionRefusedError:
+        except Exception:  # Changed from ConnectionRefusedError to catch all exceptions
             return False
 
 

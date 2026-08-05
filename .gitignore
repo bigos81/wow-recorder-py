@@ -1,4 +1,44 @@
-.venv/**
-__pycache__
-src/run.sh
-/.coverage
+# .gitignore
+
+# Dev configuration
+*.cfg
+
+# Virtual environments
+.env
+.venv/
+*.egg-info/
+dist/
+build/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*.sublime-*
+*.project
+.gitattributes
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+.Python
+env/
+venv/
+
+# Coverage and testing
+.coverage
+htmlcov/
+.pytest_cache/
+*.cov
+htmlcov/index.html
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Logs and data
+*.log
+*.dat
+logs/
